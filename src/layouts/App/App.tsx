@@ -5,7 +5,6 @@ import { Switch, Route } from 'react-router-dom';
 import cn from 'classnames';
 import '../../styles/core.scss';
 import styles from './app.module.scss';
-import AppPreloader from 'components/AppPreloader/AppPreloader';
 import { introduceDelay } from 'utilities/general';
 
 // global actions
@@ -24,7 +23,7 @@ export const App = (): ReactElement => {
     return (
         <div className={styles.appWrapper}>
             {isLoading ? (
-                <AppPreloader />
+                <div>Loading...</div>
             ) : (
                 <div className={cn(styles.appContainer)}>
                     <Switch>
