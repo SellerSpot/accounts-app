@@ -1,4 +1,4 @@
-import { initializeGlobalServices } from 'config/globalConfig';
+import { initializeGlobalConfig } from 'config/globalConfig';
 import { ROUTES } from 'config/routes';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Switch, Route } from 'react-router-dom';
@@ -6,9 +6,10 @@ import cn from 'classnames';
 import '../../styles/core.scss';
 import styles from './app.module.scss';
 import { introduceDelay } from 'utilities/general';
+import { AppPreloader } from '@sellerspot/universal-components';
 
 // global actions
-initializeGlobalServices(); // application common initilizers goes here
+initializeGlobalConfig(); // application common initilizers goes here
 
 export const App = (): ReactElement => {
     const [isLoading, setIsLoading] = useState(true);
@@ -23,7 +24,7 @@ export const App = (): ReactElement => {
     return (
         <div className={styles.appWrapper}>
             {isLoading ? (
-                <div>Loading...</div>
+                <AppPreloader />
             ) : (
                 <div className={cn(styles.appContainer)}>
                     <Switch>

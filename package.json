@@ -10,7 +10,7 @@
         "build:analyze": "webpack --mode production --env NODE_ENV=production --env production --env analyze",
         "lint": "eslint src --max-warnings 0",
         "lint:fix": "eslint src --fix --max-warnings 0",
-        "update:packages": "npm install --save @sellerspot/database-models",
+        "update:packages": "npm install --save @sellerspot/universal-components",
         "storybook": "start-storybook -p 9006",
         "build:storybook": "build-storybook",
         "prettier": "prettier --write src",
@@ -73,7 +73,7 @@
     },
     "dependencies": {
         "@reduxjs/toolkit": "^1.5.0",
-        "@sellerspot/universal-components": "^1.16.2",
+        "@sellerspot/universal-components": "^1.16.3",
         "ag-grid-community": "^25.1.0",
         "ag-grid-react": "^25.1.0",
         "axios": "^0.21.1",

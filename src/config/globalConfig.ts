@@ -1,9 +1,13 @@
-import { apiService } from 'services/services';
+import { COLORS, FONT_SIZE } from 'config/theme';
+import { initializeThemeConfig } from '@sellerspot/universal-components';
 
-export const initializeGlobalServices = async (): Promise<void> => {
-    apiService.initiateService();
+export const initializeGlobalConfig = async (): Promise<void> => {
+    initializeUniversalComponents();
 };
 
-export const updateGlobalServices = async (token: string): Promise<void> => {
-    apiService.initiateService();
+const initializeUniversalComponents = () => {
+    initializeThemeConfig({
+        colors: COLORS,
+        fontSizes: FONT_SIZE,
+    });
 };
