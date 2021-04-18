@@ -2,16 +2,44 @@
     width: 100vw;
     height: 100vh;
     overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-y: auto;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 80px;
 }
 
 .appContainer {
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    width: 450px;
+    height: auto;
+    padding: 20px;
 
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+
+    .logoWrapper {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        cursor: pointer;
+        padding: 10px;
+
+        .logoicon {
+            height: 35px;
+            width: auto;
+        }
+        .logoText {
+            margin-top: 5px;
+            height: 25px;
+            width: auto;
+        }
+
+        &:hover {
+            background: $backgroundPrimary-color;
+        }
+    }
 }

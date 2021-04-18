@@ -1,0 +1,63 @@
+{
+    "name": "@sellerspot/universal-components",
+    "version": "1.16.4+896db551",
+    "description": "Universal Components for sellerspot eco-system.",
+    "main": "dist/index.js",
+    "scripts": {
+        "dev": "webpack --mode development --env development",
+        "build:dev": "webpack --mode development  --env production && yalc push",
+        "build": "webpack --mode production --env NODE_ENV=production --env production",
+        "build:analyze": "webpack --mode production --env NODE_ENV=production --env production --env analyze",
+        "lint": "eslint src --max-warnings 0",
+        "lint:fix": "eslint src --fix --max-warnings 0",
+        "storybook": "start-storybook -p 9007",
+        "build:storybook": "build-storybook",
+        "prettier": "prettier --write src",
+        "lint-staged": "lint-staged",
+        "husky:install": "husky install",
+        "husky:pre-commit": "npm run lint-staged"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/SellerSpot/universal-components.git"
+    },
+    "keywords": [
+        "sellerspot",
+        "react-universal-components"
+    ],
+    "author": "ThayalanGR",
+    "contributors": [
+        {
+            "name": "Rohit Raj",
+            "email": "rij7u7d@gmail.com",
+            "url": "https://github.com/RohitRajP"
+        },
+        {
+            "name": "ThayalanGR",
+            "email": "grthayalan18@gmail.com",
+            "url": "https://github.com/ThayalanGR"
+        }
+    ],
+    "license": "ISC",
+    "lint-staged": {
+        "*.{ts,tsx,less}": [
+            "prettier --write",
+            "git add"
+        ],
+        "*.{ts,tsx}": "eslint --fix --max-warnings 0"
+    },
+    "dependencies": {
+        "@material-ui/core": "^4.11.3",
+        "@material-ui/lab": "^4.0.0-alpha.57",
+        "classnames": "^2.2.6",
+        "lodash": "^4.17.21",
+        "react-icons": "^4.2.0",
+        "react-router-dom": "^5.2.0",
+        "zustand": "^3.4.1"
+    },
+    "bugs": {
+        "url": "https://github.com/SellerSpot/universal-components/issues"
+    },
+    "homepage": "https://github.com/SellerSpot/universal-components#readme",
+    "yalcSig": "896db551cc5b81d77d570df1db1c6c88"
+}

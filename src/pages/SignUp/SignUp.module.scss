@@ -1,0 +1,25 @@
+.signUpWrapper {
+    width: auto;
+    height: auto;
+    padding: 0 15px;
+
+    .welcomeTitle {
+        font-weight: bold;
+    }
+
+    .welcomeSubTitle {
+        margin-top: 10px;
+    }
+
+    .signInLink {
+        margin-top: 5px;
+        margin-left: -4px;
+    }
+
+    .formWrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-top: 20px;
+    }
+}
