@@ -4,6 +4,7 @@ import { ROUTES } from 'config/routes';
 import React, { ReactElement } from 'react';
 import { useHistory } from 'react-router';
 import styles from './SignUp.module.scss';
+import { Formik } from 'formik';
 
 export const SignUp = (): ReactElement => {
     const history = useHistory();
@@ -34,33 +35,73 @@ export const SignUp = (): ReactElement => {
                 label="Already have an account? Signin instead"
                 className={{ wrapper: styles.signInLink }}
             />
-            <form onSubmit={signUpFormOnSubmitHandler} className={styles.formWrapper}>
-                <InputField
-                    label="Your Name"
-                    theme="primary"
-                    type="text"
-                    autoFocus={true}
-                    fullWidth={true}
-                    size="medium"
-                />
-                <InputField
-                    label="Store Name"
-                    theme="primary"
-                    type="text"
-                    autoFocus={true}
-                    fullWidth={true}
-                    size="medium"
-                />
-                <InputField
-                    label="Store Url"
-                    theme="primary"
-                    type="text"
-                    autoFocus={true}
-                    fullWidth={true}
-                    size="medium"
-                    suffix={baseDomainSuffix}
-                />
-            </form>
+            <Formik
+                initialValues={{ email: '', password: '' }}
+                validate={(_) => {
+                    // do validation
+                }}
+                onSubmit={(_) => {
+                    // do submition
+                }}
+            >
+                {(
+                    {
+                        /* and other goodies */
+                    },
+                ) => (
+                    <form onSubmit={signUpFormOnSubmitHandler} className={styles.formWrapper}>
+                        <InputField
+                            label="Your Name"
+                            theme="primary"
+                            type="text"
+                            autoFocus={true}
+                            fullWidth={true}
+                            size="medium"
+                        />
+                        <InputField
+                            label="Store Name"
+                            theme="primary"
+                            type="text"
+                            autoFocus={true}
+                            fullWidth={true}
+                            size="medium"
+                        />
+                        <InputField
+                            label="Store Url"
+                            theme="primary"
+                            type="text"
+                            autoFocus={true}
+                            fullWidth={true}
+                            size="medium"
+                            suffix={baseDomainSuffix}
+                        />
+                        <InputField
+                            label="Email Address"
+                            theme="primary"
+                            type="text"
+                            autoFocus={true}
+                            fullWidth={true}
+                            size="medium"
+                        />
+                        <InputField
+                            label="Password"
+                            theme="primary"
+                            type="password"
+                            autoFocus={true}
+                            fullWidth={true}
+                            size="medium"
+                        />
+                        <Button
+                            type="submit"
+                            theme="primary"
+                            variant="contained"
+                            size="large"
+                            label="Signup for free!"
+                            fullWidth={true}
+                        />
+                    </form>
+                )}
+            </Formik>
         </div>
     );
 };
