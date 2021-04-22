@@ -1,10 +1,10 @@
-import { Button, InputField } from '@sellerspot/universal-components';
+import { Button, IInputFieldProps, InputField } from '@sellerspot/universal-components';
 import { CONFIG } from 'config/config';
 import { ROUTES } from 'config/routes';
 import React, { ReactElement } from 'react';
 import { useHistory } from 'react-router';
 import styles from './SignUp.module.scss';
-import { Formik } from 'formik';
+import { useFormik } from 'formik';
 
 export const SignUp = (): ReactElement => {
     const history = useHistory();
@@ -13,12 +13,46 @@ export const SignUp = (): ReactElement => {
         history.push(ROUTES.SIGN_IN);
     };
 
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+            storeName: '',
+            storeUrl: '',
+            email: '',
+            password: '',
+        },
+        onSubmit: (_) => {
+            // handle submition
+        },
+    });
+
     const signUpFormOnSubmitHandler: React.FormEventHandler = (e) => {
         e.preventDefault();
         // do validation and submition
     };
 
     const baseDomainSuffix = `.${CONFIG.BASE_DOMAIN_NAME}`;
+
+    const getInputFieldCommonProps = (
+        fieldName: keyof typeof formik.values,
+    ): Partial<IInputFieldProps> => {
+        const hasError = !!formik.errors[fieldName];
+        const theme = hasError ? 'danger' : 'primary';
+        return {
+            theme,
+            fullWidth: true,
+            size: 'medium',
+            onChange: formik.handleChange,
+            value: formik.values[fieldName],
+            helperMessage: {
+                enabled: hasError,
+                type: 'error',
+                content: formik.errors[fieldName],
+            },
+            id: fieldName,
+            name: fieldName,
+        };
+    };
 
     return (
         <div className={styles.signUpWrapper}>
@@ -35,73 +69,59 @@ export const SignUp = (): ReactElement => {
                 label="Already have an account? Signin instead"
                 className={{ wrapper: styles.signInLink }}
             />
-            <Formik
-                initialValues={{ email: '', password: '' }}
-                validate={(_) => {
-                    // do validation
-                }}
-                onSubmit={(_) => {
-                    // do submition
-                }}
-            >
-                {(
-                    {
-                        /* and other goodies */
-                    },
-                ) => (
-                    <form onSubmit={signUpFormOnSubmitHandler} className={styles.formWrapper}>
-                        <InputField
-                            label="Your Name"
-                            theme="primary"
-                            type="text"
-                            autoFocus={true}
-                            fullWidth={true}
-                            size="medium"
-                        />
-                        <InputField
-                            label="Store Name"
-                            theme="primary"
-                            type="text"
-                            autoFocus={true}
-                            fullWidth={true}
-                            size="medium"
-                        />
-                        <InputField
-                            label="Store Url"
-                            theme="primary"
-                            type="text"
-                            autoFocus={true}
-                            fullWidth={true}
-                            size="medium"
-                            suffix={baseDomainSuffix}
-                        />
-                        <InputField
-                            label="Email Address"
-                            theme="primary"
-                            type="text"
-                            autoFocus={true}
-                            fullWidth={true}
-                            size="medium"
-                        />
-                        <InputField
-                            label="Password"
-                            theme="primary"
-                            type="password"
-                            autoFocus={true}
-                            fullWidth={true}
-                            size="medium"
-                        />
-                        <Button
-                            type="submit"
-                            theme="primary"
-                            variant="contained"
-                            size="large"
-                            label="Signup for free!"
-                            fullWidth={true}
-                        />
-                    </form>
-                )}
-            </Formik>
+            <form onSubmit={formik.handleSubmit} className={styles.formWrapper}>
+                <InputField
+                    label="Your Name"
+                    type="text"
+                    autoFocus={true}
+                    required={true}
+                    theme={'primary'}
+                    fullWidth={true}
+                    size={'medium'}
+                    onChange={formik.handleChange}
+                    value={formik.values.name}
+                    helperMessage={{
+                        enabled: !!formik.errors.name,
+                        type: 'error',
+                        content: formik.errors.name,
+                    }}
+                    id="name"
+                    name="name"
+                />
+                <InputField
+                    label="Store Name"
+                    type="text"
+                    theme={!!formik.errors.storeName ? 'danger' : 'primary'}
+                    {...getInputFieldCommonProps('storeName')}
+                />
+                <InputField
+                    label="Store Url"
+                    type="text"
+                    suffix={baseDomainSuffix}
+                    theme={!!formik.errors.storeUrl ? 'danger' : 'primary'}
+                    {...getInputFieldCommonProps('storeUrl')}
+                />
+                <InputField
+                    label="Email Address"
+                    type="text"
+                    theme={!!formik.errors.email ? 'danger' : 'primary'}
+                    {...getInputFieldCommonProps('email')}
+                />
+                <InputField
+                    label="Password"
+                    type="password"
+                    theme={!!formik.errors.email ? 'danger' : 'primary'}
+                    {...getInputFieldCommonProps('password')}
+                />
+                <Button
+                    type="submit"
+                    theme="primary"
+                    variant="contained"
+                    size="large"
+                    label="Signup for free!"
+                    fullWidth={true}
+                />
+            </form>
         </div>
     );
 };
