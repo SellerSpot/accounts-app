@@ -1,12 +1,14 @@
-import { initializeGlobalConfig } from 'config/globalConfig';
-import { ROUTES } from 'config/routes';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import cn from 'classnames';
+
 import '../../styles/core.scss';
 import styles from './app.module.scss';
+
 // import { introduceDelay } from 'utilities/general';
 import { AppPreloader, Logo, LogoText } from '@sellerspot/universal-components';
+import { initializeGlobalConfig } from 'config/globalConfig';
+import { ROUTES } from 'config/routes';
 import { SignUp } from 'pages/SignUp/SignUp';
 import { CONFIG } from 'config/config';
 
