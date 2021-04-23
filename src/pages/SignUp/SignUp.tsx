@@ -8,6 +8,7 @@ import { ROUTES } from 'config/routes';
 import styles from './SignUp.module.scss';
 import SignUpService from './Singup.service';
 import { ISignupFormValues } from './SignUp.types';
+import * as yup from 'yup';
 
 export const SignUp = (): ReactElement => {
     const history = useHistory();
@@ -21,8 +22,25 @@ export const SignUp = (): ReactElement => {
     const submitionHandler: React.FormEventHandler = (values: React.FormEvent<Element>) =>
         SignUpService.submitionHandler(values);
 
-    const validationHandler = (values: React.FormEvent<Element>) =>
-        SignUpService.validationHandler(values);
+    // const validationHandler = (values: React.FormEvent<Element>) =>
+    //     SignUpService.validationHandler(values);
+
+    const handleNameValidation = (value: string) => {
+        // console.log(value.currentTarget);
+
+        return SignUpService.validationHandler(value, 'name');
+    };
+    const handleStoreNameValidation = (value: string) => {
+        // console.log(value.currentTarget);
+
+        return SignUpService.validationHandler(value, 'storeName');
+    };
+
+    const required = (value: string) => {
+        const result = SignUpService.validationHandler(value, 'name');
+        console.log(result);
+        return result;
+    };
 
     return (
         <div className={styles.signUpWrapper}>
@@ -42,11 +60,14 @@ export const SignUp = (): ReactElement => {
             <Form
                 onSubmit={submitionHandler}
                 initialValues={SignUpService.initialFormValues}
-                validate={validationHandler}
+                subscription={{}} // empty object overrides all subscriptions
             >
-                {({ handleSubmit, submitting, form }) => (
+                {({ handleSubmit, submitting }) => (
                     <form onSubmit={handleSubmit} className={styles.formWrapper} noValidate>
-                        <Field name="name">
+                        <Field
+                            name="name"
+                            validate={(value) => SignUpService.validationHandler(value, 'name')}
+                        >
                             {({ input, meta: { error, touched } }) => {
                                 const hasError = error && touched;
                                 const helperMessage: IInputFieldProps['helperMessage'] = {
@@ -59,7 +80,7 @@ export const SignUp = (): ReactElement => {
                                     : 'primary';
                                 return (
                                     <InputField
-                                        {...(input as unknown)}
+                                        {...input}
                                         label="Your Name"
                                         autoFocus={true}
                                         type="text"
@@ -68,12 +89,14 @@ export const SignUp = (): ReactElement => {
                                         fullWidth={true}
                                         required={true}
                                         helperMessage={helperMessage}
-                                        {...(input as unknown)}
                                     />
                                 );
                             }}
                         </Field>
-                        <Field name="storeName">
+                        <Field
+                            name="storeName"
+                            validate={(value) => SignUpService.validationHandler(value, 'name')}
+                        >
                             {({ input, meta: { error, touched } }) => {
                                 const hasError = error && touched;
                                 const helperMessage: IInputFieldProps['helperMessage'] = {
@@ -86,6 +109,7 @@ export const SignUp = (): ReactElement => {
                                     : 'primary';
                                 return (
                                     <InputField
+                                        {...input}
                                         label="Store Name"
                                         type="text"
                                         theme={theme}
@@ -93,38 +117,55 @@ export const SignUp = (): ReactElement => {
                                         fullWidth={true}
                                         required={true}
                                         helperMessage={helperMessage}
-                                        {...(input as unknown)}
                                     />
                                 );
                             }}
                         </Field>
-                        <Field name="storeUrl">
-                            {({ input, meta: { error, touched } }) => {
-                                const hasError = error && touched;
+                        <Field
+                            name="storeUrl"
+                            validate={(value) =>
+                                SignUpService.asyncValidationHandler(value, 'storeUrl')
+                            }
+                        >
+                            {({ input, meta: { error, touched, validating } }) => {
+                                const helperTextType: IInputFieldProps['helperMessage']['type'] = validating
+                                    ? 'loading'
+                                    : 'error';
+
+                                let helperTextContent: string = error;
+                                if (validating) {
+                                    helperTextContent = 'Checking Url Status';
+                                }
+                                const helperMessageEnabled = (error || validating) && touched;
                                 const helperMessage: IInputFieldProps['helperMessage'] = {
-                                    enabled: hasError,
-                                    type: 'error',
-                                    content: error,
+                                    enabled: helperMessageEnabled,
+                                    type: helperTextType,
+                                    content: helperTextContent,
                                 };
-                                const theme: IInputFieldProps['theme'] = hasError
-                                    ? 'danger'
-                                    : 'primary';
+                                const inputFieldTheme: IInputFieldProps['theme'] =
+                                    helperTextType === 'error' && helperMessageEnabled
+                                        ? 'danger'
+                                        : 'primary';
                                 return (
                                     <InputField
+                                        {...input}
                                         label="Store Url"
                                         type="text"
+                                        direction="rtl"
                                         suffix={baseDomainSuffix}
-                                        theme={theme}
+                                        theme={inputFieldTheme}
                                         size={'medium'}
                                         fullWidth={true}
                                         required={true}
                                         helperMessage={helperMessage}
-                                        {...(input as unknown)}
                                     />
                                 );
                             }}
                         </Field>
-                        <Field name="email">
+                        <Field
+                            name="email"
+                            validate={(value) => SignUpService.validationHandler(value, 'email')}
+                        >
                             {({ input, meta: { error, touched } }) => {
                                 const hasError = error && touched;
                                 const helperMessage: IInputFieldProps['helperMessage'] = {
@@ -137,6 +178,7 @@ export const SignUp = (): ReactElement => {
                                     : 'primary';
                                 return (
                                     <InputField
+                                        {...input}
                                         label="Email Address"
                                         type="text"
                                         theme={theme}
@@ -144,12 +186,14 @@ export const SignUp = (): ReactElement => {
                                         fullWidth={true}
                                         required={true}
                                         helperMessage={helperMessage}
-                                        {...(input as unknown)}
                                     />
                                 );
                             }}
                         </Field>
-                        <Field name="password">
+                        <Field
+                            name="password"
+                            validate={(value) => SignUpService.validationHandler(value, 'password')}
+                        >
                             {({ input, meta: { error, touched } }) => {
                                 const hasError = error && touched;
                                 const helperMessage: IInputFieldProps['helperMessage'] = {
@@ -162,6 +206,7 @@ export const SignUp = (): ReactElement => {
                                     : 'primary';
                                 return (
                                     <InputField
+                                        {...input}
                                         label="Password"
                                         type="password"
                                         theme={theme}
@@ -169,7 +214,6 @@ export const SignUp = (): ReactElement => {
                                         fullWidth={true}
                                         required={true}
                                         helperMessage={helperMessage}
-                                        {...(input as unknown)}
                                     />
                                 );
                             }}

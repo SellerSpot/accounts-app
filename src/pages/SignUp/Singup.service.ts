@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 import { AnyObject, setIn } from 'final-form';
 import { ISignupFormValues } from './SignUp.types';
+import { introduceDelay } from 'utilities/general';
 
 export default class SignUpService {
     static initialFormValues: ISignupFormValues = {
@@ -15,21 +16,43 @@ export default class SignUpService {
         // do subimtion
     };
 
-    static validationHandler = async (values: React.FormEvent<Element>): Promise<AnyObject> => {
+    static asyncValidationHandler = async (
+        value: string,
+        fieldPath: keyof ISignupFormValues,
+    ): Promise<string> => {
+        if (fieldPath === 'storeUrl') {
+            await introduceDelay(2000);
+        }
+        // get schema instance for the required field
+        const requiredSchema = yup.reach(SignUpService.validationSchema, fieldPath);
         try {
-            await SignUpService.validationSchema.validate(values, {
-                abortEarly: false,
+            requiredSchema.validateSync(value, {
+                abortEarly: true,
             });
         } catch (error) {
             if (error instanceof yup.ValidationError) {
-                const innerErrorObjectFormationHandler = (
-                    previousValue: { [key: string]: string },
-                    currentValue: yup.ValidationError,
-                ) => {
-                    return setIn(previousValue, currentValue.path, currentValue.message);
-                };
-                const errors = error.inner.reduce(innerErrorObjectFormationHandler, {});
-                return errors;
+                return error.message;
+            }
+            // uncaught error
+            return error;
+        }
+    };
+
+    static validationHandler = (value: string, fieldPath: keyof ISignupFormValues): string => {
+        // TODO: Please remove this
+        // NOTE: ASYNC Validation is triggering unoptimized form renders
+        // if (fieldPath === 'storeUrl') {
+        //     await introduceDelay(2000);
+        // }
+        // get schema instance for the required field
+        const requiredSchema = yup.reach(SignUpService.validationSchema, fieldPath);
+        try {
+            requiredSchema.validateSync(value, {
+                abortEarly: true,
+            });
+        } catch (error) {
+            if (error instanceof yup.ValidationError) {
+                return error.message;
             }
             // uncaught error
             return error;

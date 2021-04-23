@@ -1,6 +1,6 @@
 {
     "name": "@sellerspot/universal-components",
-    "version": "1.16.7+7ca32434",
+    "version": "1.16.9+0513edff",
     "description": "Universal Components for sellerspot eco-system.",
     "main": "dist/index.js",
     "scripts": {
@@ -51,6 +51,7 @@
         "@material-ui/lab": "^4.0.0-alpha.57",
         "classnames": "^2.2.6",
         "lodash": "^4.17.21",
+        "nanoid": "^3.1.22",
         "react-icons": "^4.2.0",
         "react-router-dom": "^5.2.0",
         "zustand": "^3.4.1"
@@ -59,5 +60,5 @@
         "url": "https://github.com/SellerSpot/universal-components/issues"
     },
     "homepage": "https://github.com/SellerSpot/universal-components#readme",
-    "yalcSig": "7ca324343be9264c284538556a84fb7a"
+    "yalcSig": "0513edff63b79d4c02d81c80623f2ce9"
 }
