@@ -17,7 +17,8 @@
         "lint-staged": "lint-staged",
         "postinstall": "npm run husky:install",
         "husky:install": "husky install",
-        "husky:pre-commit": "npm run lint-staged",
+        "husky:pre-commit": "npm run lint-staged && npm run stylelint:fix",
+        "stylelint:fix": "npx stylelint \"**/*.scss\" --fix",
         "yalc:link": "yalc link @sellerspot/universal-components",
         "yalc:remove": "yalc remove --all"
     },
@@ -62,6 +63,8 @@
         "sass-loader": "^10.1.1",
         "sass-resources-loader": "^2.1.1",
         "style-loader": "^2.0.0",
+        "stylelint": "^13.12.0",
+        "stylelint-config-idiomatic-order": "^8.1.0",
         "ts-loader": "^8.0.12",
         "ts-node": "^9.1.1",
         "tsconfig-paths-webpack-plugin": "^3.3.0",

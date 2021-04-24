@@ -1,7 +1,6 @@
 import * as yup from 'yup';
-import { AnyObject, setIn } from 'final-form';
-import { ISignupFormValues } from './SignUp.types';
 import { introduceDelay } from 'utilities/general';
+import { ISignupFormValues } from './SignUp.types';
 
 export default class SignUpService {
     static initialFormValues: ISignupFormValues = {
@@ -14,6 +13,7 @@ export default class SignUpService {
 
     static submitionHandler = async (values: React.FormEvent<Element>): Promise<void> => {
         // do subimtion
+        console.log(values);
     };
 
     static asyncValidationHandler = async (

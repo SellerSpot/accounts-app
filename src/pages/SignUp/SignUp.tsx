@@ -1,14 +1,11 @@
-import React, { ReactElement } from 'react';
 import { useHistory } from 'react-router';
 import { Form, Field } from 'react-final-form';
-
-import { Button, IInputFieldProps, InputField } from '@sellerspot/universal-components';
-import { CONFIG } from 'config/config';
+import React, { ReactElement } from 'react';
 import { ROUTES } from 'config/routes';
-import styles from './SignUp.module.scss';
+import { CONFIG } from 'config/config';
+import { Button, IInputFieldProps, InputField } from '@sellerspot/universal-components';
 import SignUpService from './Singup.service';
-import { ISignupFormValues } from './SignUp.types';
-import * as yup from 'yup';
+import styles from './SignUp.module.scss';
 
 export const SignUp = (): ReactElement => {
     const history = useHistory();
@@ -21,26 +18,6 @@ export const SignUp = (): ReactElement => {
 
     const submitionHandler: React.FormEventHandler = (values: React.FormEvent<Element>) =>
         SignUpService.submitionHandler(values);
-
-    // const validationHandler = (values: React.FormEvent<Element>) =>
-    //     SignUpService.validationHandler(values);
-
-    const handleNameValidation = (value: string) => {
-        // console.log(value.currentTarget);
-
-        return SignUpService.validationHandler(value, 'name');
-    };
-    const handleStoreNameValidation = (value: string) => {
-        // console.log(value.currentTarget);
-
-        return SignUpService.validationHandler(value, 'storeName');
-    };
-
-    const required = (value: string) => {
-        const result = SignUpService.validationHandler(value, 'name');
-        console.log(result);
-        return result;
-    };
 
     return (
         <div className={styles.signUpWrapper}>
