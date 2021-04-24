@@ -1,5 +1,8 @@
 import * as yup from 'yup';
 import { introduceDelay } from 'utilities/general';
+import { FieldMetaState } from 'react-final-form';
+import { CONFIG } from 'config/config';
+import { IInputFieldProps } from '@sellerspot/universal-components';
 import { ISignupFormValues } from './SignUp.types';
 
 export default class SignUpService {
@@ -12,44 +15,38 @@ export default class SignUpService {
     };
 
     static submitionHandler = async (values: React.FormEvent<Element>): Promise<void> => {
-        // do subimtion
+        // submition logic goes here
         console.log(values);
     };
 
-    static asyncValidationHandler = async (
-        value: string,
-        fieldPath: keyof ISignupFormValues,
-    ): Promise<string> => {
-        if (fieldPath === 'storeUrl') {
-            await introduceDelay(2000);
-        }
-        // get schema instance for the required field
-        const requiredSchema = yup.reach(SignUpService.validationSchema, fieldPath);
+    static storeUrlAvailabilityCheckHandler = async (value: string): Promise<string> => {
         try {
-            requiredSchema.validateSync(value, {
-                abortEarly: true,
-            });
+            const fieldPath: keyof ISignupFormValues = 'storeUrl';
+            // get schema instance for the required field
+            const requiredSchema: yup.SchemaOf<ISignupFormValues['storeUrl']> = yup.reach(
+                SignUpService.validationSchema,
+                fieldPath,
+            );
+            requiredSchema.validateSync(value, { abortEarly: true });
+            // do api validation here
+            await introduceDelay(1000);
+            // axios.get('url?domain=${value}')
         } catch (error) {
             if (error instanceof yup.ValidationError) {
                 return error.message;
             }
             // uncaught error
-            return error;
+            return 'NOT_AVAILABLE'; // which will be caught in ui layer and will be displayed as domain not availble
         }
     };
 
     static validationHandler = (value: string, fieldPath: keyof ISignupFormValues): string => {
-        // TODO: Please remove this
-        // NOTE: ASYNC Validation is triggering unoptimized form renders
-        // if (fieldPath === 'storeUrl') {
-        //     await introduceDelay(2000);
-        // }
-        // get schema instance for the required field
-        const requiredSchema = yup.reach(SignUpService.validationSchema, fieldPath);
+        const requiredSchema: yup.SchemaOf<ISignupFormValues[typeof fieldPath]> = yup.reach(
+            SignUpService.validationSchema,
+            fieldPath,
+        );
         try {
-            requiredSchema.validateSync(value, {
-                abortEarly: true,
-            });
+            requiredSchema.validateSync(value, { abortEarly: true });
         } catch (error) {
             if (error instanceof yup.ValidationError) {
                 return error.message;
@@ -74,12 +71,71 @@ export default class SignUpService {
         storeUrl: yup
             .string()
             .required('Store url is required')
-            .min(3, 'Store name should be more than 3 characters')
-            .max(15, 'Store name should not be more than 15 characters'),
+            .min(3, 'Store url should be more than 3 characters')
+            .max(15, 'Store url should not be more than 15 characters'),
         password: yup
             .string()
             .required('Password is required')
             .min(3, 'Password length should be more than 3'),
         email: yup.string().required('Email is required').email('Invalid email id'),
     });
+
+    static getStoreUrlFieldProps = (
+        value: string,
+        { error, validating, valid, touched, visited }: FieldMetaState<string>,
+    ): {
+        helperMessage: IInputFieldProps['helperMessage'];
+        inputFieldTheme: IInputFieldProps['theme'];
+    } => {
+        const baseDomainSuffix = `.${CONFIG.BASE_DOMAIN_NAME}`;
+        let helperTextType: IInputFieldProps['helperMessage']['type'] = 'none';
+        let helperTextContent: string = error;
+        let inputFieldTheme: IInputFieldProps['theme'] = 'primary';
+        const helperMessageEnabled = (error || validating || valid) && (touched || visited);
+        if (helperMessageEnabled)
+            if (validating) {
+                helperTextType = 'loading';
+                helperTextContent = 'Checking for availability';
+            } else if (valid) {
+                helperTextType = 'success';
+                inputFieldTheme = 'success';
+                helperTextContent = `${value}${baseDomainSuffix} is available.`;
+            } else if (error) {
+                // error
+                helperTextType = 'error';
+                inputFieldTheme = 'danger';
+                helperTextContent =
+                    error === 'NOT_AVAILABLE'
+                        ? `${value}${baseDomainSuffix} is not available.`
+                        : error;
+            }
+        const helperMessage: IInputFieldProps['helperMessage'] = {
+            enabled: helperMessageEnabled,
+            type: helperTextType,
+            content: helperTextContent,
+        };
+
+        return {
+            helperMessage,
+            inputFieldTheme,
+        };
+    };
+
+    static getStaticFieldProps = ({
+        error,
+        touched,
+    }: FieldMetaState<string>): {
+        helperMessage: IInputFieldProps['helperMessage'];
+        theme: IInputFieldProps['theme'];
+    } => {
+        const hasError = error && touched;
+        const helperMessage: IInputFieldProps['helperMessage'] = {
+            enabled: hasError,
+            type: 'error',
+            content: error,
+        };
+        const theme: IInputFieldProps['theme'] = hasError ? 'danger' : 'primary';
+
+        return { helperMessage, theme };
+    };
 }

@@ -1,16 +1,184 @@
+import { sanitize } from 'utilities/sanitizer';
 import { useHistory } from 'react-router';
 import { Form, Field } from 'react-final-form';
 import React, { ReactElement } from 'react';
 import { ROUTES } from 'config/routes';
 import { CONFIG } from 'config/config';
-import { Button, IInputFieldProps, InputField } from '@sellerspot/universal-components';
+import { Button, InputField } from '@sellerspot/universal-components';
 import SignUpService from './Singup.service';
+import { TOnChangeMiddleware } from './SignUp.types';
 import styles from './SignUp.module.scss';
+
+const NameField = (): ReactElement => {
+    return (
+        <Field
+            name="name"
+            validate={(value) => SignUpService.validationHandler(value, 'name')}
+            validateFields={[]} // to disable unnecessary triggering of validation in other fields
+        >
+            {({ input, meta }) => {
+                const { helperMessage, theme } = SignUpService.getStaticFieldProps(meta);
+                const onChangeMiddleWare: TOnChangeMiddleware = (e) => {
+                    e.target.value = sanitize('onlyAllowAlphabets', e.target.value);
+                    input.onChange(e);
+                };
+                return (
+                    <InputField
+                        {...input}
+                        onChange={onChangeMiddleWare}
+                        label="Your Name"
+                        autoFocus={true}
+                        type="text"
+                        theme={theme}
+                        size={'medium'}
+                        fullWidth={true}
+                        required={true}
+                        helperMessage={helperMessage}
+                        name={undefined} // to disable auto complete feature
+                        disableAutoComplete={true}
+                    />
+                );
+            }}
+        </Field>
+    );
+};
+
+const StoreNameField = (): ReactElement => {
+    return (
+        <Field
+            name="storeName"
+            validate={(value) => SignUpService.validationHandler(value, 'storeName')}
+            validateFields={[]}
+        >
+            {({ input, meta }) => {
+                const { helperMessage, theme } = SignUpService.getStaticFieldProps(meta);
+                const onChangeMiddleWare: TOnChangeMiddleware = (e) => {
+                    e.target.value = sanitize('onlyAllowAlphaNumeric', e.target.value);
+                    input.onChange(e);
+                };
+                return (
+                    <InputField
+                        {...input}
+                        onChange={onChangeMiddleWare}
+                        label="Store Name"
+                        type="text"
+                        theme={theme}
+                        size={'medium'}
+                        fullWidth={true}
+                        required={true}
+                        helperMessage={helperMessage}
+                        name={undefined} // to disable auto complete feature
+                        disableAutoComplete={true}
+                    />
+                );
+            }}
+        </Field>
+    );
+};
+
+const StoreUrlField = (): ReactElement => {
+    return (
+        <Field
+            name="storeUrl"
+            validate={async (value: string) =>
+                await SignUpService.storeUrlAvailabilityCheckHandler(value)
+            }
+            validateFields={[]}
+        >
+            {({ input, meta }) => {
+                const { inputFieldTheme, helperMessage } = SignUpService.getStoreUrlFieldProps(
+                    input.value,
+                    meta,
+                );
+                const onChangeMiddleWare: TOnChangeMiddleware = (e) => {
+                    e.target.value = sanitize('onlyAllowAlphaNumeric', e.target.value);
+                    input.onChange(e);
+                };
+                return (
+                    <InputField
+                        {...input}
+                        onChange={onChangeMiddleWare}
+                        label="Store Url"
+                        type="text"
+                        direction="rtl"
+                        suffix={`.${CONFIG.BASE_DOMAIN_NAME}`}
+                        theme={inputFieldTheme}
+                        size={'medium'}
+                        fullWidth={true}
+                        required={true}
+                        helperMessage={helperMessage}
+                        name={undefined} // to disable auto complete feature
+                        disableAutoComplete={true}
+                    />
+                );
+            }}
+        </Field>
+    );
+};
+
+const EmailAddressField = (): ReactElement => {
+    return (
+        <Field
+            name="email"
+            validate={(value) => SignUpService.validationHandler(value, 'email')}
+            validateFields={[]}
+        >
+            {({ input, meta }) => {
+                const { helperMessage, theme } = SignUpService.getStaticFieldProps(meta);
+                return (
+                    <InputField
+                        {...input}
+                        label="Email Address"
+                        type="text"
+                        theme={theme}
+                        size={'medium'}
+                        fullWidth={true}
+                        required={true}
+                        helperMessage={helperMessage}
+                        name={undefined} // to disable auto complete feature
+                        disableAutoComplete={true}
+                    />
+                );
+            }}
+        </Field>
+    );
+};
+
+const PasswordField = (): ReactElement => {
+    return (
+        <Field
+            name="password"
+            validate={(value) => SignUpService.validationHandler(value, 'password')}
+            validateFields={[]}
+        >
+            {({ input, meta }) => {
+                const { helperMessage, theme } = SignUpService.getStaticFieldProps(meta);
+                const onChangeMiddleWare: TOnChangeMiddleware = (e) => {
+                    e.target.value = sanitize('removeAllSpaces', e.target.value);
+                    input.onChange(e);
+                };
+                return (
+                    <InputField
+                        {...input}
+                        onChange={onChangeMiddleWare}
+                        label="Password"
+                        type="password"
+                        theme={theme}
+                        size={'medium'}
+                        fullWidth={true}
+                        required={true}
+                        helperMessage={helperMessage}
+                        name={undefined} // to disable auto complete feature
+                        disableAutoComplete={true}
+                    />
+                );
+            }}
+        </Field>
+    );
+};
 
 export const SignUp = (): ReactElement => {
     const history = useHistory();
-
-    const baseDomainSuffix = `.${CONFIG.BASE_DOMAIN_NAME}`;
 
     const signInHandler = () => {
         history.push(ROUTES.SIGN_IN);
@@ -41,160 +209,11 @@ export const SignUp = (): ReactElement => {
             >
                 {({ handleSubmit, submitting }) => (
                     <form onSubmit={handleSubmit} className={styles.formWrapper} noValidate>
-                        <Field
-                            name="name"
-                            validate={(value) => SignUpService.validationHandler(value, 'name')}
-                        >
-                            {({ input, meta: { error, touched } }) => {
-                                const hasError = error && touched;
-                                const helperMessage: IInputFieldProps['helperMessage'] = {
-                                    enabled: hasError,
-                                    type: 'error',
-                                    content: error,
-                                };
-                                const theme: IInputFieldProps['theme'] = hasError
-                                    ? 'danger'
-                                    : 'primary';
-                                return (
-                                    <InputField
-                                        {...input}
-                                        label="Your Name"
-                                        autoFocus={true}
-                                        type="text"
-                                        theme={theme}
-                                        size={'medium'}
-                                        fullWidth={true}
-                                        required={true}
-                                        helperMessage={helperMessage}
-                                    />
-                                );
-                            }}
-                        </Field>
-                        <Field
-                            name="storeName"
-                            validate={(value) => SignUpService.validationHandler(value, 'name')}
-                        >
-                            {({ input, meta: { error, touched } }) => {
-                                const hasError = error && touched;
-                                const helperMessage: IInputFieldProps['helperMessage'] = {
-                                    enabled: hasError,
-                                    type: 'error',
-                                    content: error,
-                                };
-                                const theme: IInputFieldProps['theme'] = hasError
-                                    ? 'danger'
-                                    : 'primary';
-                                return (
-                                    <InputField
-                                        {...input}
-                                        label="Store Name"
-                                        type="text"
-                                        theme={theme}
-                                        size={'medium'}
-                                        fullWidth={true}
-                                        required={true}
-                                        helperMessage={helperMessage}
-                                    />
-                                );
-                            }}
-                        </Field>
-                        <Field
-                            name="storeUrl"
-                            validate={(value) =>
-                                SignUpService.asyncValidationHandler(value, 'storeUrl')
-                            }
-                        >
-                            {({ input, meta: { error, touched, validating } }) => {
-                                const helperTextType: IInputFieldProps['helperMessage']['type'] = validating
-                                    ? 'loading'
-                                    : 'error';
-
-                                let helperTextContent: string = error;
-                                if (validating) {
-                                    helperTextContent = 'Checking Url Status';
-                                }
-                                const helperMessageEnabled = (error || validating) && touched;
-                                const helperMessage: IInputFieldProps['helperMessage'] = {
-                                    enabled: helperMessageEnabled,
-                                    type: helperTextType,
-                                    content: helperTextContent,
-                                };
-                                const inputFieldTheme: IInputFieldProps['theme'] =
-                                    helperTextType === 'error' && helperMessageEnabled
-                                        ? 'danger'
-                                        : 'primary';
-                                return (
-                                    <InputField
-                                        {...input}
-                                        label="Store Url"
-                                        type="text"
-                                        direction="rtl"
-                                        suffix={baseDomainSuffix}
-                                        theme={inputFieldTheme}
-                                        size={'medium'}
-                                        fullWidth={true}
-                                        required={true}
-                                        helperMessage={helperMessage}
-                                    />
-                                );
-                            }}
-                        </Field>
-                        <Field
-                            name="email"
-                            validate={(value) => SignUpService.validationHandler(value, 'email')}
-                        >
-                            {({ input, meta: { error, touched } }) => {
-                                const hasError = error && touched;
-                                const helperMessage: IInputFieldProps['helperMessage'] = {
-                                    enabled: hasError,
-                                    type: 'error',
-                                    content: error,
-                                };
-                                const theme: IInputFieldProps['theme'] = hasError
-                                    ? 'danger'
-                                    : 'primary';
-                                return (
-                                    <InputField
-                                        {...input}
-                                        label="Email Address"
-                                        type="text"
-                                        theme={theme}
-                                        size={'medium'}
-                                        fullWidth={true}
-                                        required={true}
-                                        helperMessage={helperMessage}
-                                    />
-                                );
-                            }}
-                        </Field>
-                        <Field
-                            name="password"
-                            validate={(value) => SignUpService.validationHandler(value, 'password')}
-                        >
-                            {({ input, meta: { error, touched } }) => {
-                                const hasError = error && touched;
-                                const helperMessage: IInputFieldProps['helperMessage'] = {
-                                    enabled: hasError,
-                                    type: 'error',
-                                    content: error,
-                                };
-                                const theme: IInputFieldProps['theme'] = hasError
-                                    ? 'danger'
-                                    : 'primary';
-                                return (
-                                    <InputField
-                                        {...input}
-                                        label="Password"
-                                        type="password"
-                                        theme={theme}
-                                        size={'medium'}
-                                        fullWidth={true}
-                                        required={true}
-                                        helperMessage={helperMessage}
-                                    />
-                                );
-                            }}
-                        </Field>
+                        <NameField />
+                        <StoreNameField />
+                        <StoreUrlField />
+                        <EmailAddressField />
+                        <PasswordField />
                         <Button
                             type="submit"
                             theme="primary"

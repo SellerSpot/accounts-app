@@ -1,4 +1,4 @@
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { SignUp } from 'pages/SignUp/SignUp';
 import { ROUTES } from 'config/routes';
@@ -40,6 +40,9 @@ export const App = (): ReactElement => {
                         {/* all other routes should be nested above this route because it is '/' route hence should be placed atlast */}
                         <Route path={ROUTES.SIGN_UP}>
                             <SignUp />
+                        </Route>
+                        <Route>
+                            <Redirect to={ROUTES.SIGN_UP} />
                         </Route>
                     </Switch>
                 </div>

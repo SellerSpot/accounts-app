@@ -1,3 +1,5 @@
+import { FieldRenderProps } from 'react-final-form';
+
 export interface ISignupFormValues {
     name: string;
     storeName: string;
@@ -5,3 +7,11 @@ export interface ISignupFormValues {
     email: string;
     password: string;
 }
+
+export type TFieldProps<T extends keyof ISignupFormValues> = {
+    fieldProps: FieldRenderProps<ISignupFormValues[T]>;
+};
+
+export type TOnChangeMiddleware = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+) => void;
