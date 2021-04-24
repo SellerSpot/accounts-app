@@ -1,0 +1,17 @@
+{
+    "recommendations": [
+        "stylelint.vscode-stylelint",
+        "formulahendry.auto-rename-tag",
+        "coenraads.bracket-pair-colorizer-2",
+        "naumovs.color-highlight",
+        "clinyong.vscode-css-modules",
+        "usernamehw.errorlens",
+        "dsznajder.es7-react-js-snippets",
+        "dbaeumer.vscode-eslint",
+        "glenn2223.live-sass",
+        "esbenp.prettier-vscode",
+        "jakob101.relativepath",
+        "mrmlnc.vscode-scss",
+        "robertz.code-snapshot"
+    ]
+}
