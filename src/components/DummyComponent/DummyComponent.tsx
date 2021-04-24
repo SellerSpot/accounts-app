@@ -1,5 +1,5 @@
-import { merge } from 'lodash';
 import React from 'react';
+import { merge } from 'lodash';
 
 export interface IDummyComponentProps {
     message: string;

@@ -1,11 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
 import { store } from 'store/store';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import ReactDOM from 'react-dom';
+import React from 'react';
 import { App } from 'layouts/App/App';
-import { ThemeProvider } from '@sellerspot/universal-components';
 import { COLORS, FONT_SIZE } from 'config/theme';
+import { ThemeProvider } from '@sellerspot/universal-components';
 
 ReactDOM.render(
     <React.StrictMode>

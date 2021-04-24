@@ -1,16 +1,13 @@
-import React, { ReactElement, useEffect, useState } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import cn from 'classnames';
-
-import '../../styles/core.scss';
-import styles from './app.module.scss';
-
-// import { introduceDelay } from 'utilities/general';
-import { AppPreloader, Logo, LogoText } from '@sellerspot/universal-components';
-import { initializeGlobalConfig } from 'config/globalConfig';
-import { ROUTES } from 'config/routes';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { SignUp } from 'pages/SignUp/SignUp';
+import { ROUTES } from 'config/routes';
+import { initializeGlobalConfig } from 'config/globalConfig';
 import { CONFIG } from 'config/config';
+import cn from 'classnames';
+import '../../styles/core.scss';
+import { AppPreloader, Logo, LogoText } from '@sellerspot/universal-components';
+import styles from './app.module.scss';
 
 // global actions
 initializeGlobalConfig(); // application common initilizers goes here
@@ -47,7 +44,7 @@ export const App = (): ReactElement => {
                     </Switch>
                 </div>
             )}
-            {/* global components */}
+            {/* globalcomponents */}
         </div>
     );
 };
