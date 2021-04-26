@@ -12,6 +12,7 @@ import '../../styles/core.scss';
 import styles from './app.module.scss';
 
 import { SignUp } from 'pages/SignUp/SignUp';
+import { SignIn } from 'pages/SignIn/SignIn';
 import { IdentifyStore } from 'pages/IdentifyStore/IdentifyStore';
 
 // global actions
@@ -49,8 +50,11 @@ export const App = (): ReactElement => {
                         <Route path={ROUTES.IDENTIFY_STORE}>
                             <IdentifyStore />
                         </Route>
+                        <Route path={ROUTES.SIGN_IN}>
+                            <SignIn />
+                        </Route>
                         <Route>
-                            <Redirect to={ROUTES.IDENTIFY_STORE} />
+                            <Redirect to={ROUTES.SIGN_IN} />
                         </Route>
                     </Switch>
                 </div>

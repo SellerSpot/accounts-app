@@ -35,6 +35,13 @@
     font-weight: bold;
 }
 
+.storeTitle {
+    margin-top: 3px;
+
+    color: $accent-color;
+    font-weight: bold;
+}
+
 .welcomeSubTitle {
     margin-top: 10px;
 }
@@ -44,9 +51,14 @@
     margin-left: -4px;
 }
 
+.fogotPasswordLink {
+    margin-top: -30px;
+    margin-left: auto;
+}
+
 .formWrapper {
     display: flex;
     flex-direction: column;
-    margin-top: 20px;
+    margin-top: 15px;
     gap: 10px;
 }
