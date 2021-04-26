@@ -4,62 +4,48 @@ import { Form } from 'react-final-form';
 
 import { Button } from '@sellerspot/universal-components';
 import { ROUTES } from 'config/routes';
-import {
-    EmailAddressField,
-    NameField,
-    PasswordField,
-    StoreNameField,
-    StoreUrlField,
-} from './components/Fields';
-import SignUpService from './Singup.service';
+import { StoreUrlField } from './components/Fields';
+import IdentifyStoreService from './IdentifyStore.service';
 
 import commonStyles from '../../styles/common.module.scss';
+import { IIdentifyStoreFormValues } from './IdentifyStore.types';
 
-export const SignUp = (): ReactElement => {
+export const IdentifyStore = (): ReactElement => {
     const history = useHistory();
 
-    const signInHandler = () => {
-        history.push(ROUTES.SIGN_IN);
+    const signupHandler = () => {
+        history.push(ROUTES.SIGN_UP);
     };
 
-    const submitionHandler: React.FormEventHandler = (values: React.FormEvent<Element>) =>
-        SignUpService.submitionHandler(values);
+    const submitionHandler = (values: IIdentifyStoreFormValues) =>
+        IdentifyStoreService.submitionHandler(values);
 
     return (
         <div className={commonStyles.commonFormWithContentWrapper}>
-            <h4 className={commonStyles.welcomeTitle}>
-                Join our team of 10 million countrywide stores
-            </h4>
-            <h6 className={commonStyles.welcomeSubTitle}>
-                One more step to taking your business to the next level
-            </h6>
+            <h4 className={commonStyles.welcomeTitle}>Sign in to</h4>
             <Button
                 type="button"
                 theme="primary"
                 variant="text"
                 size="small"
-                onClick={signInHandler}
-                label="Already have an account? Signin instead"
+                onClick={signupHandler}
+                label="Don't have an account? Signup instead"
                 className={{ wrapper: commonStyles.signInLink }}
             />
             <Form
                 onSubmit={submitionHandler}
-                initialValues={SignUpService.initialFormValues}
+                initialValues={IdentifyStoreService.initialFormValues}
                 subscription={{}} // empty object overrides all subscriptions
             >
                 {({ handleSubmit, submitting }) => (
                     <form onSubmit={handleSubmit} className={commonStyles.formWrapper} noValidate>
-                        <NameField />
-                        <StoreNameField />
                         <StoreUrlField />
-                        <EmailAddressField />
-                        <PasswordField />
                         <Button
                             type="submit"
                             theme="primary"
                             variant="contained"
                             size="large"
-                            label="Create your store for free"
+                            label="Login to your store"
                             fullWidth={true}
                             disabled={submitting}
                         />

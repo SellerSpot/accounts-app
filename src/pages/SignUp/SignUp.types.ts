@@ -11,7 +11,3 @@ export interface ISignupFormValues {
 export type TFieldProps<T extends keyof ISignupFormValues> = {
     fieldProps: FieldRenderProps<ISignupFormValues[T]>;
 };
-
-export type TOnChangeMiddleware = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-) => void;

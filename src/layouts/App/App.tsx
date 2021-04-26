@@ -1,13 +1,18 @@
-import { Switch, Route, Redirect } from 'react-router-dom';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { SignUp } from 'pages/SignUp/SignUp';
-import { ROUTES } from 'config/routes';
-import { initializeGlobalConfig } from 'config/globalConfig';
-import { CONFIG } from 'config/config';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import cn from 'classnames';
-import '../../styles/core.scss';
+
 import { AppPreloader, Logo, LogoText } from '@sellerspot/universal-components';
+import { initializeGlobalConfig } from 'config/globalConfig';
+
+import { ROUTES } from 'config/routes';
+import { CONFIG } from 'config/config';
+
+import '../../styles/core.scss';
 import styles from './app.module.scss';
+
+import { SignUp } from 'pages/SignUp/SignUp';
+import { IdentifyStore } from 'pages/IdentifyStore/IdentifyStore';
 
 // global actions
 initializeGlobalConfig(); // application common initilizers goes here
@@ -41,8 +46,11 @@ export const App = (): ReactElement => {
                         <Route path={ROUTES.SIGN_UP}>
                             <SignUp />
                         </Route>
+                        <Route path={ROUTES.IDENTIFY_STORE}>
+                            <IdentifyStore />
+                        </Route>
                         <Route>
-                            <Redirect to={ROUTES.SIGN_UP} />
+                            <Redirect to={ROUTES.IDENTIFY_STORE} />
                         </Route>
                     </Switch>
                 </div>

@@ -10,3 +10,7 @@ export type ArgumentsType<T extends (...args: unknown[]) => unknown> = T extends
 ) => unknown
     ? A
     : never;
+
+export type TOnChangeMiddleware = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+) => void;

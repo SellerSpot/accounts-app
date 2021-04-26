@@ -26,3 +26,27 @@
     align-items: center;
     justify-content: center;
 }
+
+.commonFormWithContentWrapper {
+    padding: 0 15px 100px 15px;
+}
+
+.welcomeTitle {
+    font-weight: bold;
+}
+
+.welcomeSubTitle {
+    margin-top: 10px;
+}
+
+.signInLink {
+    margin-top: 5px;
+    margin-left: -4px;
+}
+
+.formWrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    gap: 10px;
+}
