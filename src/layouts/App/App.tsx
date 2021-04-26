@@ -14,6 +14,7 @@ import styles from './app.module.scss';
 import { SignUp } from 'pages/SignUp/SignUp';
 import { SignIn } from 'pages/SignIn/SignIn';
 import { IdentifyStore } from 'pages/IdentifyStore/IdentifyStore';
+import { CachedSignIn } from 'pages/CachedSignIn/CachedSignIn';
 
 // global actions
 initializeGlobalConfig(); // application common initilizers goes here
@@ -53,8 +54,11 @@ export const App = (): ReactElement => {
                         <Route path={ROUTES.SIGN_IN}>
                             <SignIn />
                         </Route>
+                        <Route path={ROUTES.CACHED_SIGN_IN}>
+                            <CachedSignIn />
+                        </Route>
                         <Route>
-                            <Redirect to={ROUTES.SIGN_IN} />
+                            <Redirect to={ROUTES.CACHED_SIGN_IN} />
                         </Route>
                     </Switch>
                 </div>
