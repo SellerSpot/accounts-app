@@ -30,7 +30,7 @@
             "prettier --write",
             "git add"
         ],
-        "*.{ts,tsx}": "eslint --fix --max-warnings 0"
+        "!(*webpack.config).{ts,tsx}": "eslint --fix --max-warnings 0"
     },
     "devDependencies": {
         "@types/classnames": "^2.2.11",

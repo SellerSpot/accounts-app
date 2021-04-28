@@ -30,12 +30,12 @@ export const CachedSignIn = (): ReactElement => {
         flllSignedInState();
     }, []);
 
-    const signInWithDifferentAccountHandler = () => history.push(ROUTES.SIGN_UP);
+    const signInWithDifferentAccountHandler = () => history.push(ROUTES.IDENTIFY_STORE);
     const signupHandler = () => history.push(ROUTES.SIGN_UP);
     const signInWithHandler = (key: number) => {
         // do signin rediretion with key
         const store = stores[key];
-        history.push(ROUTES.SIGN_UP, store);
+        history.push(ROUTES.SIGN_IN, store);
     };
 
     return (
@@ -50,7 +50,9 @@ export const CachedSignIn = (): ReactElement => {
                             theme="primary"
                             variant="outlined"
                             size="large"
-                            label={store.name}
+                            label={
+                                <div className={cachedSignInStyles.customButton}>{store.name}</div>
+                            }
                             fullWidth={true}
                             onClick={() => signInWithHandler(key)}
                         />
@@ -60,7 +62,7 @@ export const CachedSignIn = (): ReactElement => {
                         theme="primary"
                         variant="contained"
                         size="large"
-                        label="Signin to a different store"
+                        label={'Signin to a different store'}
                         fullWidth={true}
                         onClick={signInWithDifferentAccountHandler}
                     />
@@ -70,7 +72,7 @@ export const CachedSignIn = (): ReactElement => {
                         theme="primary"
                         variant="contained"
                         size="large"
-                        label="Create a new account"
+                        label={'Create a new account'}
                         fullWidth={true}
                         onClick={signupHandler}
                     />
