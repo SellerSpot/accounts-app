@@ -5,8 +5,12 @@ export default class CachedSignInService {
     static async getSignedInStore(): Promise<IStoreDetail[]> {
         await introduceDelay(2000);
         return [
-            { name: 'Sreenithi Departmental Store', domain: 'Sreenithi.sellerspot.in' },
-            { name: 'Kumudham Shoppin Mall', domain: 'kumudham.sellerspot.in' },
+            {
+                id: 'uniqueidOne',
+                name: 'Sreenithi Departmental Store',
+                domain: 'sreenithi.sellerspot.in',
+            },
+            { id: 'uniqueidTwo', name: 'Kumudham Shoppin Mall', domain: 'kumudham.sellerspot.in' },
         ];
     }
 }

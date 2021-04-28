@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import cn from 'classnames';
 
-import { AppPreloader, Logo, LogoText } from '@sellerspot/universal-components';
+import { AppPreloader, Logo, LogoText, Notify } from '@sellerspot/universal-components';
 import { initializeGlobalConfig } from 'config/globalConfig';
 
 import { ROUTES } from 'config/routes';
@@ -64,6 +64,7 @@ export const App = (): ReactElement => {
                 </div>
             )}
             {/* globalcomponents */}
+            <Notify />
         </div>
     );
 };

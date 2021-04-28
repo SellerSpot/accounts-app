@@ -33,7 +33,7 @@ export const CachedSignIn = (): ReactElement => {
     const signInWithDifferentAccountHandler = () => history.push(ROUTES.IDENTIFY_STORE);
     const signupHandler = () => history.push(ROUTES.SIGN_UP);
     const signInWithHandler = (key: number) => {
-        // do signin rediretion with key
+        // do signin rediretion with state
         const store = stores[key];
         history.push(ROUTES.SIGN_IN, store);
     };

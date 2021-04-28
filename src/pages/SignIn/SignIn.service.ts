@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import { IInputFieldProps } from '@sellerspot/universal-components';
 
 import { ISignInFormValues } from './SignIn.types';
+import { IStoreDetail } from 'pages/CachedSignIn/CachedSignIn.types';
 
 export default class SignInService {
     static initialFormValues: ISignInFormValues = {
@@ -14,6 +15,20 @@ export default class SignInService {
     static submitionHandler = async (values: ISignInFormValues): Promise<void> => {
         // submition logic goes here
         console.log(values);
+    };
+
+    static checkHasValidStoreDetail = (state: IStoreDetail): boolean => {
+        const storeDetailValidationSchema: yup.SchemaOf<IStoreDetail> = yup.object().shape({
+            id: yup.string().required(),
+            domain: yup.string().required(),
+            name: yup.string().required(),
+        });
+        try {
+            storeDetailValidationSchema.validateSync(state, { abortEarly: true });
+            return true;
+        } catch (error) {
+            return false;
+        }
     };
 
     static validationHandler = (value: string, fieldPath: keyof ISignInFormValues): string => {

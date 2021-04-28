@@ -1,8 +1,8 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import { Form } from 'react-final-form';
 
-import { Button } from '@sellerspot/universal-components';
+import { Button, showNotify } from '@sellerspot/universal-components';
 import { ROUTES } from 'config/routes';
 import { EmailAddressField, PasswordField } from './components/Fields';
 import SignInService from './SignIn.service';
@@ -10,14 +10,24 @@ import SignInService from './SignIn.service';
 import commonStyles from '../../styles/common.module.scss';
 import { ISignInFormValues } from './SignIn.types';
 import { Loader } from 'components/Loader/Loader';
+import { IStoreDetail } from 'pages/CachedSignIn/CachedSignIn.types';
 
 export const SignIn = (): ReactElement => {
     const history = useHistory();
     const [isLoading, setIsLoading] = useState(true);
+    const [storeDetail, setStoreDetail] = useState<IStoreDetail>({ domain: '', name: '', id: '' });
+    const location = useLocation<IStoreDetail>();
 
     // effects
     useEffect(() => {
-        setIsLoading(false);
+        if (SignInService.checkHasValidStoreDetail(location.state)) {
+            setStoreDetail(location.state);
+            setIsLoading(false);
+        } else {
+            // show notification - for invalid store
+            showNotify('Invalid store, Please check store url!');
+            identifyStoreHandler();
+        }
     }, []);
 
     // handlers
@@ -31,7 +41,7 @@ export const SignIn = (): ReactElement => {
         <Loader isLoading={isLoading}>
             <div className={commonStyles.commonFormWithContentWrapper}>
                 <h4 className={commonStyles.welcomeTitle}>Sign in to</h4>
-                <h5 className={commonStyles.storeTitle}>Sreenithi Departmental Store</h5>
+                <h5 className={commonStyles.storeTitle}>{storeDetail.name}</h5>
                 <Button
                     type="button"
                     theme="primary"
