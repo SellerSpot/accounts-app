@@ -41,7 +41,7 @@ export const ForgotPassword = (): ReactElement => {
     return (
         <Loader isLoading={isLoading}>
             <div className={commonStyles.commonFormWithContentWrapper}>
-                <h4 className={commonStyles.welcomeTitle}>Forgot Store URL?</h4>
+                <h4 className={commonStyles.welcomeTitle}>Forgot Password?</h4>
                 <h5 className={commonStyles.storeTitle}>{storeDetail.name}</h5>
                 <h6 className={commonStyles.welcomeSubTitle}>
                     Store admin will only receive password reset mail, <br />
