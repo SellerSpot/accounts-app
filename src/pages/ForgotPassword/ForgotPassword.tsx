@@ -10,8 +10,8 @@ import ForgotPasswordService from './ForgotPassword.service';
 import commonStyles from '../../styles/common.module.scss';
 import { IForgotPasswordFormValues } from './ForgotPassword.types';
 import { Loader } from 'components/Loader/Loader';
-import { IStoreDetail } from 'pages/CachedSignIn/CachedSignIn.types';
 import SignInService from 'pages/SignIn/SignIn.service';
+import { IStoreDetail } from 'typings/store.types';
 
 export const ForgotPassword = (): ReactElement => {
     const history = useHistory();

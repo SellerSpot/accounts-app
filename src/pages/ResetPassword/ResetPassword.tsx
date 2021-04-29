@@ -1,59 +1,62 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { Form } from 'react-final-form';
-
 import { Button, showNotify } from '@sellerspot/universal-components';
-import { ROUTES } from 'config/routes';
-import { EmailAddressField, PasswordField } from './components/Fields';
-import SignInService from './SignIn.service';
 
+import { ROUTES } from 'config/routes';
+import { PasswordField } from './components/Fields';
+import ResetPasswordServie from './ResetPassword.service';
 import commonStyles from '../../styles/common.module.scss';
-import { ISignInFormValues } from './SignIn.types';
+import { IResetPasswordFormValues, IResetPasswordParams } from './ResetPassword.types';
 import { Loader } from 'components/Loader/Loader';
 import { IStoreDetail } from 'typings/store.types';
+import ResetPasswordService from './ResetPassword.service';
 
-export const SignIn = (): ReactElement => {
+export const ResetPassword = (): ReactElement => {
     const history = useHistory();
+    const params = useParams<IResetPasswordParams>();
     const [isLoading, setIsLoading] = useState(true);
+    const [, setResetToken] = useState('');
     const [storeDetail, setStoreDetail] = useState<IStoreDetail>({ domain: '', name: '', id: '' });
-    const location = useLocation<IStoreDetail>();
 
     // effects
     useEffect(() => {
-        if (SignInService.checkHasValidStoreDetail(location.state)) {
-            setStoreDetail(location.state);
+        const resetPasswordValidationResult = ResetPasswordService.validateResetToken(params.token);
+        if (resetPasswordValidationResult) {
+            setResetToken(resetPasswordValidationResult.resetToken);
+            setStoreDetail(resetPasswordValidationResult.storeDetails);
             setIsLoading(false);
         } else {
             // show notification - for invalid store
-            showNotify('Invalid store, Please check store url!');
-            CachedSignInHandler();
+            showNotify('Invalid store or token, Please check store url and try again!');
+            cachedSignInHandler();
         }
     }, []);
 
     // handlers
-    const CachedSignInHandler = () => history.push(ROUTES.CACHED_SIGN_IN);
+    const rememberPasswordHandler = () => history.push(ROUTES.SIGN_IN, storeDetail);
+    const cachedSignInHandler = () => history.push(ROUTES.CACHED_SIGN_IN);
 
-    const forgotPasswordHandler = () => history.push(ROUTES.FORGOT_PASSWORD, storeDetail);
-
-    const submitionHandler = (values: ISignInFormValues) => SignInService.submitionHandler(values);
+    const submitionHandler = (values: IResetPasswordFormValues) =>
+        ResetPasswordServie.submitionHandler(values);
 
     return (
         <Loader isLoading={isLoading}>
             <div className={commonStyles.commonFormWithContentWrapper}>
-                <h4 className={commonStyles.welcomeTitle}>Sign in to</h4>
+                <h4 className={commonStyles.welcomeTitle}>Reset Password</h4>
                 <h5 className={commonStyles.storeTitle}>{storeDetail.name}</h5>
                 <Button
                     type="button"
                     theme="primary"
                     variant="text"
                     size="small"
-                    onClick={CachedSignInHandler}
+                    onClick={cachedSignInHandler}
                     label="Not your store?"
                     className={{ wrapper: commonStyles.signInLink }}
                 />
                 <Form
                     onSubmit={submitionHandler}
-                    initialValues={SignInService.initialFormValues}
+                    initialValues={ResetPasswordServie.initialFormValues}
                     subscription={{}} // empty object overrides all subscriptions
                 >
                     {({ handleSubmit, submitting }) => (
@@ -62,15 +65,14 @@ export const SignIn = (): ReactElement => {
                             className={commonStyles.formWrapper}
                             noValidate
                         >
-                            <EmailAddressField />
                             <PasswordField />
                             <Button
                                 type="button"
                                 theme="primary"
                                 variant="text"
                                 size="small"
-                                onClick={forgotPasswordHandler}
-                                label="Forgot Password?"
+                                onClick={rememberPasswordHandler}
+                                label="Remember passsowrd?"
                                 className={{ wrapper: commonStyles.fogotPasswordLink }}
                             />
                             <Button
@@ -78,7 +80,7 @@ export const SignIn = (): ReactElement => {
                                 theme="primary"
                                 variant="contained"
                                 size="large"
-                                label="Login to your store"
+                                label="Reset password"
                                 fullWidth={true}
                                 disabled={submitting}
                             />

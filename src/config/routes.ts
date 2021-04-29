@@ -11,5 +11,5 @@ export const ROUTES = {
     /**
      * will contains query params for tracing tenant and owner.
      */
-    RESET_PASSWORD: '/resetpassword',
+    RESET_PASSWORD: '/resetpassword/:token',
 };

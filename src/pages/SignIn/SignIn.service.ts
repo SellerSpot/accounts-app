@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { IInputFieldProps } from '@sellerspot/universal-components';
 
 import { ISignInFormValues } from './SignIn.types';
-import { IStoreDetail } from 'pages/CachedSignIn/CachedSignIn.types';
+import { IStoreDetail } from 'typings/store.types';
 
 export default class SignInService {
     static initialFormValues: ISignInFormValues = {
