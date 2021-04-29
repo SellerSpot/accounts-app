@@ -15,6 +15,7 @@ import { SignUp } from 'pages/SignUp/SignUp';
 import { SignIn } from 'pages/SignIn/SignIn';
 import { IdentifyStore } from 'pages/IdentifyStore/IdentifyStore';
 import { CachedSignIn } from 'pages/CachedSignIn/CachedSignIn';
+import { ForgotStoreUrl } from 'pages/ForgotStoreUrl/ForgotStoreUrl';
 
 // global actions
 initializeGlobalConfig(); // application common initilizers goes here
@@ -57,8 +58,11 @@ export const App = (): ReactElement => {
                         <Route path={ROUTES.CACHED_SIGN_IN}>
                             <CachedSignIn />
                         </Route>
+                        <Route path={ROUTES.FORGOT_STORE_URL}>
+                            <ForgotStoreUrl />
+                        </Route>
                         <Route>
-                            <Redirect to={ROUTES.CACHED_SIGN_IN} />
+                            <Redirect to={ROUTES.FORGOT_STORE_URL} />
                         </Route>
                     </Switch>
                 </div>

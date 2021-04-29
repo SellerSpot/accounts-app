@@ -4,51 +4,46 @@ import { Form } from 'react-final-form';
 
 import { Button } from '@sellerspot/universal-components';
 import { ROUTES } from 'config/routes';
-import { StoreUrlField } from './components/Fields';
-import IdentifyStoreService from './IdentifyStore.service';
+import { EmailAddressField } from './components/Fields';
+import ForgotStoreUrlService from './ForgotStoreUrl.service';
 
 import commonStyles from '../../styles/common.module.scss';
-import { IIdentifyStoreFormValues } from './IdentifyStore.types';
+import { IForgotStoreUrlFormValues } from './ForgotStoreUrl.types';
 import { Loader } from 'components/Loader/Loader';
 
-export const IdentifyStore = (): ReactElement => {
+export const ForgotStoreUrl = (): ReactElement => {
     const history = useHistory();
-
     const [isLoading, setIsLoading] = useState(true);
 
-    // effects
     useEffect(() => {
         setIsLoading(false);
     }, []);
 
     // handlers
-    const signupHandler = () => {
-        history.push(ROUTES.SIGN_UP);
-    };
+    const identifyStoreHandler = () => history.push(ROUTES.IDENTIFY_STORE);
 
-    const forgotStoreUrlHanlder = () => {
-        history.push(ROUTES.FORGOT_STORE_URL);
-    };
-
-    const submitionHandler = (values: IIdentifyStoreFormValues) =>
-        IdentifyStoreService.submitionHandler(values);
+    const submitionHandler = (values: IForgotStoreUrlFormValues) =>
+        ForgotStoreUrlService.submitionHandler(values);
 
     return (
         <Loader isLoading={isLoading}>
             <div className={commonStyles.commonFormWithContentWrapper}>
-                <h4 className={commonStyles.welcomeTitle}>Sign in to</h4>
+                <h4 className={commonStyles.welcomeTitle}>Forgot Store URL?</h4>
+                <h6 className={commonStyles.welcomeSubTitle}>
+                    The Store URL will be sent to the admin&apos;s registered email address.
+                </h6>
                 <Button
                     type="button"
                     theme="primary"
                     variant="text"
                     size="small"
-                    onClick={signupHandler}
-                    label="Don't have an account? Signup instead"
+                    onClick={identifyStoreHandler}
+                    label="Remember your store URL?"
                     className={{ wrapper: commonStyles.signInLink }}
                 />
                 <Form
                     onSubmit={submitionHandler}
-                    initialValues={IdentifyStoreService.initialFormValues}
+                    initialValues={ForgotStoreUrlService.initialFormValues}
                     subscription={{}} // empty object overrides all subscriptions
                 >
                     {({ handleSubmit, submitting }) => (
@@ -57,22 +52,13 @@ export const IdentifyStore = (): ReactElement => {
                             className={commonStyles.formWrapper}
                             noValidate
                         >
-                            <StoreUrlField />
-                            <Button
-                                type="button"
-                                theme="primary"
-                                variant="text"
-                                size="small"
-                                onClick={forgotStoreUrlHanlder}
-                                label="Forgot Store URL?"
-                                className={{ wrapper: commonStyles.fogotPasswordLink }}
-                            />
+                            <EmailAddressField />
                             <Button
                                 type="submit"
                                 theme="primary"
                                 variant="contained"
                                 size="large"
-                                label="Login to your store"
+                                label="Send Store URL"
                                 fullWidth={true}
                                 disabled={submitting}
                             />
