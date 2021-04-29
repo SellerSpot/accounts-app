@@ -4,15 +4,16 @@ import { Form } from 'react-final-form';
 
 import { Button, showNotify } from '@sellerspot/universal-components';
 import { ROUTES } from 'config/routes';
-import { EmailAddressField, PasswordField } from './components/Fields';
-import SignInService from './SignIn.service';
+import { EmailAddressField } from './components/Fields';
+import ForgotPasswordService from './ForgotPassword.service';
 
 import commonStyles from '../../styles/common.module.scss';
-import { ISignInFormValues } from './SignIn.types';
+import { IForgotPasswordFormValues } from './ForgotPassword.types';
 import { Loader } from 'components/Loader/Loader';
 import { IStoreDetail } from 'pages/CachedSignIn/CachedSignIn.types';
+import SignInService from 'pages/SignIn/SignIn.service';
 
-export const SignIn = (): ReactElement => {
+export const ForgotPassword = (): ReactElement => {
     const history = useHistory();
     const [isLoading, setIsLoading] = useState(true);
     const [storeDetail, setStoreDetail] = useState<IStoreDetail>({ domain: '', name: '', id: '' });
@@ -26,34 +27,38 @@ export const SignIn = (): ReactElement => {
         } else {
             // show notification - for invalid store
             showNotify('Invalid store, Please check store url!');
-            CachedSignInHandler();
+            cachedSignInHandler();
         }
     }, []);
 
     // handlers
-    const CachedSignInHandler = () => history.push(ROUTES.CACHED_SIGN_IN);
+    const rememberPasswordHandler = () => history.push(ROUTES.SIGN_IN, storeDetail);
+    const cachedSignInHandler = () => history.push(ROUTES.CACHED_SIGN_IN);
 
-    const forgotPasswordHandler = () => history.push(ROUTES.FORGOT_PASSWORD, storeDetail);
-
-    const submitionHandler = (values: ISignInFormValues) => SignInService.submitionHandler(values);
+    const submitionHandler = (values: IForgotPasswordFormValues) =>
+        ForgotPasswordService.submitionHandler(values);
 
     return (
         <Loader isLoading={isLoading}>
             <div className={commonStyles.commonFormWithContentWrapper}>
-                <h4 className={commonStyles.welcomeTitle}>Sign in to</h4>
+                <h4 className={commonStyles.welcomeTitle}>Forgot Store URL?</h4>
                 <h5 className={commonStyles.storeTitle}>{storeDetail.name}</h5>
+                <h6 className={commonStyles.welcomeSubTitle}>
+                    Store admin will only receive password reset mail, <br />
+                    employees please contact admin.
+                </h6>
                 <Button
                     type="button"
                     theme="primary"
                     variant="text"
                     size="small"
-                    onClick={CachedSignInHandler}
+                    onClick={cachedSignInHandler}
                     label="Not your store?"
                     className={{ wrapper: commonStyles.signInLink }}
                 />
                 <Form
                     onSubmit={submitionHandler}
-                    initialValues={SignInService.initialFormValues}
+                    initialValues={ForgotPasswordService.initialFormValues}
                     subscription={{}} // empty object overrides all subscriptions
                 >
                     {({ handleSubmit, submitting }) => (
@@ -63,14 +68,13 @@ export const SignIn = (): ReactElement => {
                             noValidate
                         >
                             <EmailAddressField />
-                            <PasswordField />
                             <Button
                                 type="button"
                                 theme="primary"
                                 variant="text"
                                 size="small"
-                                onClick={forgotPasswordHandler}
-                                label="Forgot Password?"
+                                onClick={rememberPasswordHandler}
+                                label="Remember passsowrd?"
                                 className={{ wrapper: commonStyles.fogotPasswordLink }}
                             />
                             <Button
@@ -78,7 +82,7 @@ export const SignIn = (): ReactElement => {
                                 theme="primary"
                                 variant="contained"
                                 size="large"
-                                label="Login to your store"
+                                label="Send password reset mail"
                                 fullWidth={true}
                                 disabled={submitting}
                             />

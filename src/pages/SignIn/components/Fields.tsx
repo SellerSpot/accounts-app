@@ -25,6 +25,7 @@ export const EmailAddressField = (): ReactElement => {
                         size={'medium'}
                         fullWidth={true}
                         required={true}
+                        autoFocus={true}
                         helperMessage={helperMessage}
                         name={undefined} // to disable auto complete feature
                         disableAutoComplete={true}

@@ -26,8 +26,8 @@ export const SignUp = (): ReactElement => {
     }, []);
 
     // handlers
-    const signInHandler = () => {
-        history.push(ROUTES.SIGN_IN);
+    const cachedSignInHandler = () => {
+        history.push(ROUTES.CACHED_SIGN_IN);
     };
 
     const submitionHandler: React.FormEventHandler = (values: React.FormEvent<Element>) =>
@@ -47,7 +47,7 @@ export const SignUp = (): ReactElement => {
                     theme="primary"
                     variant="text"
                     size="small"
-                    onClick={signInHandler}
+                    onClick={cachedSignInHandler}
                     label="Already have an account? Signin instead"
                     className={{ wrapper: commonStyles.signInLink }}
                 />
