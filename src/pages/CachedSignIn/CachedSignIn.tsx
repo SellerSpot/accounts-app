@@ -51,7 +51,12 @@ export const CachedSignIn = (): ReactElement => {
                             variant="outlined"
                             size="large"
                             label={
-                                <div className={cachedSignInStyles.customButton}>{store.name}</div>
+                                <div className={cachedSignInStyles.customButton}>
+                                    <h5 className={cachedSignInStyles.storeName}>{store.name}</h5>
+                                    <h6 className={cachedSignInStyles.domainName}>
+                                        {store.domain}
+                                    </h6>
+                                </div>
                             }
                             fullWidth={true}
                             onClick={() => signInWithHandler(key)}
