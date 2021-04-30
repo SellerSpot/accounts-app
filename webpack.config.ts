@@ -135,6 +135,7 @@ const webpackConfiguration = (env: {
             contentBase: 'public',
             publicPath: '/',
             historyApiFallback: true,
+            host: 'accounts.sellerspot.in',
         },
         devtool: !isProduction ? 'source-map' : false,
     };
