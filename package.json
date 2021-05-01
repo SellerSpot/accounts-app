@@ -19,7 +19,7 @@
         "husky:install": "husky install",
         "husky:pre-commit": "npm run lint-staged",
         "stylelint:fix": "npx stylelint \"**/*.scss\" --fix",
-        "yalc:link": "yalc link @sellerspot/universal-components",
+        "yalc:link": "yalc link @sellerspot/universal-components @sellerspot/universal-types ",
         "yalc:remove": "yalc remove --all"
     },
     "keywords": [],
@@ -80,6 +80,7 @@
     "dependencies": {
         "@reduxjs/toolkit": "^1.5.0",
         "@sellerspot/universal-components": "^1.16.13",
+        "@sellerspot/universal-types": "^1.8.6",
         "axios": "^0.21.1",
         "classnames": "^2.2.6",
         "dotenv": "^8.2.0",
