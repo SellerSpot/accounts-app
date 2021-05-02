@@ -1,3 +1,3 @@
 export interface IIdentifyStoreFormValues {
-    storeUrl: string;
+    domainName: string;
 }

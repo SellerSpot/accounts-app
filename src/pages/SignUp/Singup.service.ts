@@ -2,28 +2,47 @@ import * as yup from 'yup';
 import { introduceDelay } from 'utilities/general';
 import { FieldMetaState } from 'react-final-form';
 import { CONFIG } from 'config/config';
-import { IInputFieldProps } from '@sellerspot/universal-components';
+import { IInputFieldProps, showNotify } from '@sellerspot/universal-components';
 import { ISignupFormValues } from './SignUp.types';
+import { authRequest } from 'requests/requests';
 
 export default class SignUpService {
     static initialFormValues: ISignupFormValues = {
         name: '',
         storeName: '',
-        storeUrl: '',
+        domainName: '',
         email: '',
         password: '',
     };
 
-    static submitionHandler = async (values: React.FormEvent<Element>): Promise<void> => {
+    static submitionHandler = async (values: ISignupFormValues): Promise<unknown> => {
+        const { name, storeName, email, password, domainName } = values;
         // submition logic goes here
-        console.log(values);
+        const response = await authRequest.signupTenant({
+            name,
+            storeName,
+            email,
+            password,
+            domainName,
+        });
+        if (response.status) {
+            // authenticate user and redirect to the retrived domain
+            console.log('success', values);
+        } else {
+            showNotify(response.error.message);
+            const error: { [key: string]: string } = {};
+            response.error.errors?.forEach((err) => {
+                error[err.name] = err.message;
+            });
+            return error;
+        }
     };
 
     static storeUrlAvailabilityCheckHandler = async (value: string): Promise<string> => {
         try {
-            const fieldPath: keyof ISignupFormValues = 'storeUrl';
+            const fieldPath: keyof ISignupFormValues = 'domainName';
             // get schema instance for the required field
-            const requiredSchema: yup.SchemaOf<ISignupFormValues['storeUrl']> = yup.reach(
+            const requiredSchema: yup.SchemaOf<ISignupFormValues['domainName']> = yup.reach(
                 SignUpService.validationSchema,
                 fieldPath,
             );
@@ -68,7 +87,7 @@ export default class SignUpService {
             .required('Store name is required')
             .min(3, 'Store name should not be less than 3 characters')
             .max(15, 'Store name should not be more than 15 characters'),
-        storeUrl: yup
+        domainName: yup
             .string()
             .required('Store url is required')
             .min(3, 'Store url should be more than 3 characters')
@@ -82,16 +101,18 @@ export default class SignUpService {
 
     static getStoreUrlFieldProps = (
         value: string,
-        { error, validating, valid, touched, visited }: FieldMetaState<string>,
+        { error, validating, valid, touched, visited, submitError }: FieldMetaState<string>,
     ): {
         helperMessage: IInputFieldProps['helperMessage'];
         inputFieldTheme: IInputFieldProps['theme'];
     } => {
+        debugger;
         const baseDomainSuffix = `.${CONFIG.BASE_DOMAIN_NAME}`;
         let helperTextType: IInputFieldProps['helperMessage']['type'] = 'none';
-        let helperTextContent: string = error;
+        let helperTextContent: string = error || submitError;
         let inputFieldTheme: IInputFieldProps['theme'] = 'primary';
-        const helperMessageEnabled = (error || validating || valid) && (touched || visited);
+        const helperMessageEnabled =
+            (error || validating || valid || submitError) && (touched || visited);
         if (helperMessageEnabled)
             if (validating) {
                 helperTextType = 'loading';
@@ -100,14 +121,14 @@ export default class SignUpService {
                 helperTextType = 'success';
                 inputFieldTheme = 'success';
                 helperTextContent = `${value}${baseDomainSuffix} is available.`;
-            } else if (error) {
+            } else if (error || submitError) {
                 // error
                 helperTextType = 'error';
                 inputFieldTheme = 'danger';
                 helperTextContent =
                     error === 'NOT_AVAILABLE'
                         ? `${value}${baseDomainSuffix} is not available.`
-                        : error;
+                        : error || submitError;
             }
         const helperMessage: IInputFieldProps['helperMessage'] = {
             enabled: helperMessageEnabled,
@@ -124,15 +145,16 @@ export default class SignUpService {
     static getStaticFieldProps = ({
         error,
         touched,
+        submitError,
     }: FieldMetaState<string>): {
         helperMessage: IInputFieldProps['helperMessage'];
         theme: IInputFieldProps['theme'];
     } => {
-        const hasError = error && touched;
+        const hasError = (error || submitError) && touched;
         const helperMessage: IInputFieldProps['helperMessage'] = {
             enabled: hasError,
             type: 'error',
-            content: error,
+            content: error || submitError,
         };
         const theme: IInputFieldProps['theme'] = hasError ? 'danger' : 'primary';
 

@@ -9,7 +9,7 @@ import { IIdentifyStoreFormValues } from './IdentifyStore.types';
 
 export default class IdentifyStoreService {
     static initialFormValues: IIdentifyStoreFormValues = {
-        storeUrl: '',
+        domainName: '',
     };
 
     static submitionHandler = async (values: IIdentifyStoreFormValues): Promise<void> => {
@@ -19,9 +19,9 @@ export default class IdentifyStoreService {
 
     static storeUrlValidator = async (value: string): Promise<string> => {
         try {
-            const fieldPath: keyof IIdentifyStoreFormValues = 'storeUrl';
+            const fieldPath: keyof IIdentifyStoreFormValues = 'domainName';
             // get schema instance for the required field
-            const requiredSchema: yup.SchemaOf<IIdentifyStoreFormValues['storeUrl']> = yup.reach(
+            const requiredSchema: yup.SchemaOf<IIdentifyStoreFormValues['domainName']> = yup.reach(
                 IdentifyStoreService.validationSchema,
                 fieldPath,
             );
@@ -80,7 +80,7 @@ export default class IdentifyStoreService {
     };
 
     private static validationSchema: yup.SchemaOf<IIdentifyStoreFormValues> = yup.object().shape({
-        storeUrl: yup
+        domainName: yup
             .string()
             .required('Store url is required')
             .min(3, 'NOT_AVAILABLE')

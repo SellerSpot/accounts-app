@@ -15,6 +15,7 @@ import SignUpService from './Singup.service';
 
 import commonStyles from '../../styles/common.module.scss';
 import { Loader } from 'components/Loader/Loader';
+import { ISignupFormValues } from './SignUp.types';
 
 export const SignUp = (): ReactElement => {
     const history = useHistory();
@@ -30,8 +31,11 @@ export const SignUp = (): ReactElement => {
         history.push(ROUTES.CACHED_SIGN_IN);
     };
 
-    const submitionHandler: React.FormEventHandler = (values: React.FormEvent<Element>) =>
-        SignUpService.submitionHandler(values);
+    const submitionHandler = async (values: ISignupFormValues) => {
+        const resposne = await SignUpService.submitionHandler(values);
+        console.log(resposne);
+        return resposne;
+    };
 
     return (
         <Loader isLoading={isLoading}>
@@ -54,7 +58,7 @@ export const SignUp = (): ReactElement => {
                 <Form
                     onSubmit={submitionHandler}
                     initialValues={SignUpService.initialFormValues}
-                    subscription={{}} // empty object overrides all subscriptions
+                    subscription={{ submitting: true, submitError: true, submitErrors: true }} // empty object overrides all subscriptions
                 >
                     {({ handleSubmit, submitting }) => (
                         <form
@@ -72,8 +76,12 @@ export const SignUp = (): ReactElement => {
                                 theme="primary"
                                 variant="contained"
                                 size="large"
-                                label="Create your store for free"
                                 fullWidth={true}
+                                label={
+                                    submitting
+                                        ? 'Please wait, Creating your account...'
+                                        : 'Create your store for free'
+                                }
                                 disabled={submitting}
                             />
                         </form>

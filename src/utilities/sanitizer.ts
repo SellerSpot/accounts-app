@@ -16,7 +16,7 @@ export type TRegularExpressionKeys = keyof typeof regularExpressions;
  * collction regular expressions
  */
 export const regularExpressions = infertTypesFromObject({
-    onlyAllowAlphaNumeric: /[^a-zA-Z0-9]/g,
+    onlyAllowAlphaNumeric: /[^a-zA-Z0-9\s]/g,
     removeAllSpaces: /[\s]/g,
     onlyAllowAlphabets: /[^a-zA-Z\s]/g,
 });

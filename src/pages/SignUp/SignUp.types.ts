@@ -3,7 +3,7 @@ import { FieldRenderProps } from 'react-final-form';
 export interface ISignupFormValues {
     name: string;
     storeName: string;
-    storeUrl: string;
+    domainName: string;
     email: string;
     password: string;
 }

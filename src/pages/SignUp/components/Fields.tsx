@@ -78,7 +78,7 @@ export const StoreNameField = (): ReactElement => {
 export const StoreUrlField = (): ReactElement => {
     return (
         <Field
-            name="storeUrl"
+            name="domainName"
             validate={async (value: string) =>
                 await SignUpService.storeUrlAvailabilityCheckHandler(value)
             }

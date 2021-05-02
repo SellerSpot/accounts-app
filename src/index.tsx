@@ -9,14 +9,12 @@ import { App } from 'layouts/App/App';
 import { COLORS, FONT_SIZE } from 'config/theme';
 
 ReactDOM.render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <BrowserRouter>
-                <ThemeProvider colors={COLORS} fontSizes={FONT_SIZE}>
-                    <App />
-                </ThemeProvider>
-            </BrowserRouter>
-        </Provider>
-    </React.StrictMode>,
+    <Provider store={store}>
+        <BrowserRouter>
+            <ThemeProvider colors={COLORS} fontSizes={FONT_SIZE}>
+                <App />
+            </ThemeProvider>
+        </BrowserRouter>
+    </Provider>,
     document.getElementById('root'),
 );

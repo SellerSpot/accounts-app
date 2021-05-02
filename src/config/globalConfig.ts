@@ -6,5 +6,10 @@ export const initializeGlobalConfig = async (): Promise<void> => {
 };
 
 const configureNotifyComponent = () => {
-    configureNotify({ placement: 'bottomLeft', theme: 'default', autoHideDuration: 3000 });
+    configureNotify({
+        placement: 'bottomLeft',
+        theme: 'default',
+        autoHideDuration: 3000,
+        showNotifyAction: true,
+    });
 };

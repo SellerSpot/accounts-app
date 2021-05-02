@@ -38,13 +38,20 @@ export class ApiService {
                 data: payload,
             });
             if (response.data.status !== undefined) return response.data;
+            else {
+                throw new Error('unknown error');
+            }
         } catch (error) {
-            // connectivity issues can be caught here
-            const errorResponse: IErrorResponse = {
-                code: ERROR_CODE.UNKNOWN_ERROR,
-                message: 'Something went wrong, please try again later!',
-            };
-            return { status: false, error: errorResponse };
+            if (error?.response?.data?.status !== undefined) {
+                return error.response.data;
+            } else {
+                // connectivity issues can be caught here
+                const errorResponse: IErrorResponse = {
+                    code: ERROR_CODE.UNKNOWN_ERROR,
+                    message: 'Something went wrong, please try again later!',
+                };
+                return { status: false, error: errorResponse };
+            }
         }
         // for complex cases when we need to manage authorization
         // tap the response, unauthenticate the user and redirect to login route (accounts app)
