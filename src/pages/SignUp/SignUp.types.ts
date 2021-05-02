@@ -1,4 +1,5 @@
-import { FieldRenderProps } from 'react-final-form';
+import { FormApi } from 'final-form';
+// import { FieldRenderProps } from 'react-final-form';
 
 export interface ISignupFormValues {
     name: string;
@@ -8,6 +9,10 @@ export interface ISignupFormValues {
     password: string;
 }
 
-export type TFieldProps<T extends keyof ISignupFormValues> = {
-    fieldProps: FieldRenderProps<ISignupFormValues[T]>;
-};
+// export type TFieldProps<T extends keyof ISignupFormValues> = {
+//     fieldProps: FieldRenderProps<ISignupFormValues[T]>;
+// };
+
+export interface IFieldProps {
+    form: FormApi<ISignupFormValues, Partial<ISignupFormValues>>;
+}

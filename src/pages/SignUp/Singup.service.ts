@@ -2,9 +2,13 @@ import * as yup from 'yup';
 import { introduceDelay } from 'utilities/general';
 import { FieldMetaState } from 'react-final-form';
 import { CONFIG } from 'config/config';
+import { ISignupTenantResponse, ERROR_CODE } from '@sellerspot/universal-types';
 import { IInputFieldProps, showNotify } from '@sellerspot/universal-components';
 import { ISignupFormValues } from './SignUp.types';
 import { authRequest } from 'requests/requests';
+import { useHistory } from 'react-router';
+import { ROUTES } from 'config/routes';
+import { FormApi } from 'final-form';
 
 export default class SignUpService {
     static initialFormValues: ISignupFormValues = {
@@ -15,7 +19,10 @@ export default class SignUpService {
         password: '',
     };
 
-    static submitionHandler = async (values: ISignupFormValues): Promise<unknown> => {
+    static submitionHandler = async (
+        values: ISignupFormValues,
+        history: ReturnType<typeof useHistory>,
+    ): Promise<unknown> => {
         const { name, storeName, email, password, domainName } = values;
         // submition logic goes here
         const response = await authRequest.signupTenant({
@@ -25,16 +32,51 @@ export default class SignUpService {
             password,
             domainName,
         });
-        if (response.status) {
-            // authenticate user and redirect to the retrived domain
-            console.log('success', values);
+        const { status, data, error } = response;
+        if (status) {
+            SignUpService.authenticatedRedirectionHandler(data, history);
         } else {
-            showNotify(response.error.message);
-            const error: { [key: string]: string } = {};
-            response.error.errors?.forEach((err) => {
-                error[err.name] = err.message;
+            const resultError: { [key in keyof Partial<ISignupFormValues>]: string } = {};
+            if (error.message) {
+                showNotify(error?.message);
+            }
+            switch (error.code) {
+                case ERROR_CODE.VALIDATION_ERROR:
+                    error?.errors?.forEach((err) => {
+                        resultError[err.name as keyof ISignupFormValues] = err.message;
+                    });
+                    break;
+                case ERROR_CODE.TENANT_ALREADY_EXIST:
+                    resultError['email'] = 'Email id already exist!';
+                    break;
+                case ERROR_CODE.DOMAIN_ALREADY_EXIST:
+                    resultError[
+                        'domainName'
+                    ] = `${values.domainName}.${CONFIG.BASE_DOMAIN_NAME} is not Available!`;
+                    break;
+                default:
+                    break;
+            }
+            return resultError;
+        }
+    };
+
+    static authenticatedRedirectionHandler = (
+        data: ISignupTenantResponse['data'],
+        history: ReturnType<typeof useHistory>,
+    ): void => {
+        // authenticate user and redirect to the retrived domain
+        if (data?.domainName) {
+            showNotify('Store created successfully, Redirecting to your store...', {
+                theme: 'success',
+                autoHideDuration: 2000,
+                onClose: () => {
+                    window.open(`http://${data?.domainName}`, '_self');
+                },
             });
-            return error;
+        } else {
+            showNotify('Something went wrong, try sigining in with your email id password');
+            history.push(ROUTES.CACHED_SIGN_IN);
         }
     };
 
@@ -106,7 +148,6 @@ export default class SignUpService {
         helperMessage: IInputFieldProps['helperMessage'];
         inputFieldTheme: IInputFieldProps['theme'];
     } => {
-        debugger;
         const baseDomainSuffix = `.${CONFIG.BASE_DOMAIN_NAME}`;
         let helperTextType: IInputFieldProps['helperMessage']['type'] = 'none';
         let helperTextContent: string = error || submitError;
@@ -142,14 +183,17 @@ export default class SignUpService {
         };
     };
 
-    static getStaticFieldProps = ({
-        error,
-        touched,
-        submitError,
-    }: FieldMetaState<string>): {
+    static getStaticFieldProps = (
+        fieldName: string,
+        { error, touched, dirtySinceLastSubmit, submitError }: FieldMetaState<string>,
+        form: FormApi<ISignupFormValues, Partial<ISignupFormValues>>,
+    ): {
         helperMessage: IInputFieldProps['helperMessage'];
         theme: IInputFieldProps['theme'];
     } => {
+        if (dirtySinceLastSubmit && submitError) {
+            form.mutators.resetMutator(fieldName);
+        }
         const hasError = (error || submitError) && touched;
         const helperMessage: IInputFieldProps['helperMessage'] = {
             enabled: hasError,

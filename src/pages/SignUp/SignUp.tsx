@@ -16,6 +16,7 @@ import SignUpService from './Singup.service';
 import commonStyles from '../../styles/common.module.scss';
 import { Loader } from 'components/Loader/Loader';
 import { ISignupFormValues } from './SignUp.types';
+import { Mutator } from 'final-form';
 
 export const SignUp = (): ReactElement => {
     const history = useHistory();
@@ -32,9 +33,15 @@ export const SignUp = (): ReactElement => {
     };
 
     const submitionHandler = async (values: ISignupFormValues) => {
-        const resposne = await SignUpService.submitionHandler(values);
-        console.log(resposne);
-        return resposne;
+        return await SignUpService.submitionHandler(values, history);
+    };
+
+    const resetMutator = (
+        arg: [keyof ISignupFormValues],
+        state: { formState: { submitErrors: { [key in keyof ISignupFormValues]: string } } },
+    ) => {
+        const fieldName = arg[0];
+        state.formState.submitErrors[fieldName] = undefined;
     };
 
     return (
@@ -58,19 +65,20 @@ export const SignUp = (): ReactElement => {
                 <Form
                     onSubmit={submitionHandler}
                     initialValues={SignUpService.initialFormValues}
-                    subscription={{ submitting: true, submitError: true, submitErrors: true }} // empty object overrides all subscriptions
+                    subscription={{ submitting: true }} // empty object overrides all subscriptions
+                    mutators={{ resetMutator: resetMutator as Mutator<ISignupFormValues> }}
                 >
-                    {({ handleSubmit, submitting }) => (
+                    {({ handleSubmit, submitting, form, submitSucceeded }) => (
                         <form
                             onSubmit={handleSubmit}
                             className={commonStyles.formWrapper}
                             noValidate
                         >
-                            <NameField />
-                            <StoreNameField />
-                            <StoreUrlField />
-                            <EmailAddressField />
-                            <PasswordField />
+                            <NameField form={form} />
+                            <StoreNameField form={form} />
+                            <StoreUrlField form={form} />
+                            <EmailAddressField form={form} />
+                            <PasswordField form={form} />
                             <Button
                                 type="submit"
                                 theme="primary"
@@ -82,7 +90,7 @@ export const SignUp = (): ReactElement => {
                                         ? 'Please wait, Creating your account...'
                                         : 'Create your store for free'
                                 }
-                                disabled={submitting}
+                                disabled={submitting && submitSucceeded}
                             />
                         </form>
                     )}

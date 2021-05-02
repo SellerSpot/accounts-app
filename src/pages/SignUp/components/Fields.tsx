@@ -7,8 +7,10 @@ import { CONFIG } from 'config/config';
 
 import SignUpService from '../Singup.service';
 import { TOnChangeMiddleware } from 'typings/common.types';
+import { FormApi } from 'final-form';
+import { IFieldProps, ISignupFormValues } from '../SignUp.types';
 
-export const NameField = (): ReactElement => {
+export const NameField = (props: IFieldProps): ReactElement => {
     return (
         <Field
             name="name"
@@ -16,7 +18,11 @@ export const NameField = (): ReactElement => {
             validateFields={[]} // to disable unnecessary triggering of validation in other fields
         >
             {({ input, meta }) => {
-                const { helperMessage, theme } = SignUpService.getStaticFieldProps(meta);
+                const { helperMessage, theme } = SignUpService.getStaticFieldProps(
+                    input.name,
+                    meta,
+                    props.form,
+                );
                 const onChangeMiddleWare: TOnChangeMiddleware = (e) => {
                     e.target.value = sanitize('onlyAllowAlphabets', e.target.value);
                     input.onChange(e);
@@ -42,7 +48,7 @@ export const NameField = (): ReactElement => {
     );
 };
 
-export const StoreNameField = (): ReactElement => {
+export const StoreNameField = (props: IFieldProps): ReactElement => {
     return (
         <Field
             name="storeName"
@@ -50,7 +56,11 @@ export const StoreNameField = (): ReactElement => {
             validateFields={[]}
         >
             {({ input, meta }) => {
-                const { helperMessage, theme } = SignUpService.getStaticFieldProps(meta);
+                const { helperMessage, theme } = SignUpService.getStaticFieldProps(
+                    input.name,
+                    meta,
+                    props.form,
+                );
                 const onChangeMiddleWare: TOnChangeMiddleware = (e) => {
                     e.target.value = sanitize('onlyAllowAlphaNumeric', e.target.value);
                     input.onChange(e);
@@ -75,7 +85,10 @@ export const StoreNameField = (): ReactElement => {
     );
 };
 
-export const StoreUrlField = (): ReactElement => {
+export const StoreUrlField = (props: {
+    form: FormApi<ISignupFormValues, Partial<ISignupFormValues>>;
+}): ReactElement => {
+    const { form } = props;
     return (
         <Field
             name="domainName"
@@ -85,6 +98,9 @@ export const StoreUrlField = (): ReactElement => {
             validateFields={[]}
         >
             {({ input, meta }) => {
+                if (meta.dirtySinceLastSubmit && meta.submitError) {
+                    form.mutators.resetMutator('domainName' as keyof ISignupFormValues);
+                }
                 const { inputFieldTheme, helperMessage } = SignUpService.getStoreUrlFieldProps(
                     input.value,
                     meta,
@@ -115,7 +131,7 @@ export const StoreUrlField = (): ReactElement => {
     );
 };
 
-export const EmailAddressField = (): ReactElement => {
+export const EmailAddressField = (props: IFieldProps): ReactElement => {
     return (
         <Field
             name="email"
@@ -123,7 +139,11 @@ export const EmailAddressField = (): ReactElement => {
             validateFields={[]}
         >
             {({ input, meta }) => {
-                const { helperMessage, theme } = SignUpService.getStaticFieldProps(meta);
+                const { helperMessage, theme } = SignUpService.getStaticFieldProps(
+                    input.name,
+                    meta,
+                    props.form,
+                );
                 return (
                     <InputField
                         {...input}
@@ -143,7 +163,7 @@ export const EmailAddressField = (): ReactElement => {
     );
 };
 
-export const PasswordField = (): ReactElement => {
+export const PasswordField = (props: IFieldProps): ReactElement => {
     return (
         <Field
             name="password"
@@ -151,7 +171,11 @@ export const PasswordField = (): ReactElement => {
             validateFields={[]}
         >
             {({ input, meta }) => {
-                const { helperMessage, theme } = SignUpService.getStaticFieldProps(meta);
+                const { helperMessage, theme } = SignUpService.getStaticFieldProps(
+                    input.name,
+                    meta,
+                    props.form,
+                );
                 const onChangeMiddleWare: TOnChangeMiddleware = (e) => {
                     e.target.value = sanitize('removeAllSpaces', e.target.value);
                     input.onChange(e);
