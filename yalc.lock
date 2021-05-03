@@ -2,10 +2,10 @@
   "version": "v1",
   "packages": {
     "@sellerspot/universal-components": {
-      "signature": "8c80eca02dec2dde8c08fec1de864c09"
+      "signature": "81a0b4f756751505fac3b0227c1be7db"
     },
     "@sellerspot/universal-types": {
-      "signature": "ea808e14f78f1b8206f7043d29204522"
+      "signature": "d58b24503a367930b84e883622d64a7f"
     }
   }
 }

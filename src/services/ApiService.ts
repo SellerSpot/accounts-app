@@ -43,7 +43,13 @@ export class ApiService {
             }
         } catch (error) {
             if (error?.response?.data?.status !== undefined) {
-                return error.response.data;
+                const data: IResponse = error?.response?.data;
+                if (data.error.code === ERROR_CODE.NOT_AUTHENTICATED_USER) {
+                    // unauthenticate and redirect to accoutns app accounts.sellerspot.in/signin?store=thaya.sellerspot.in&path=/routeintheapp
+                    // clears localstorage
+                } else {
+                    return error.response.data;
+                }
             } else {
                 // connectivity issues can be caught here
                 const errorResponse: IErrorResponse = {
