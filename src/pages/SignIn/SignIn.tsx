@@ -11,6 +11,7 @@ import commonStyles from '../../styles/common.module.scss';
 import { ISignInFormValues } from './SignIn.types';
 import { Loader } from 'components/Loader/Loader';
 import { IStoreDetails } from 'typings/temp.types';
+import CachedSignInService from 'pages/CachedSignIn/CachedSignIn.service';
 
 export const SignIn = (): ReactElement => {
     const history = useHistory();
@@ -22,16 +23,28 @@ export const SignIn = (): ReactElement => {
     });
     const location = useLocation<IStoreDetails>();
 
-    // effects
-    useEffect(() => {
+    // performs validation and authenticates user if already signin
+    const validateStoreDetails = async () => {
         if (SignInService.checkHasValidStoreDetail(location.state)) {
-            setStoreDetail(location.state);
-            setIsLoading(false);
+            if (
+                !(await SignInService.redirectIfAuthenticated(location.state.domainName, history))
+            ) {
+                setStoreDetail(location.state);
+                setIsLoading(false);
+            }
         } else {
             // show notification - for invalid store
             showNotify('Invalid store, Please check store url!');
+            // clear the failded cached store handler
+            CachedSignInService.removeACachedStore(location?.state?.id);
+            //  redirect to cached sigin component
             CachedSignInHandler();
         }
+    };
+
+    // effects
+    useEffect(() => {
+        validateStoreDetails();
     }, []);
 
     // handlers

@@ -27,7 +27,7 @@ export interface ISigninTenantRequest {
 }
 
 export interface ISigninTenantResponse extends IResponse {
-    data: {
+    data?: {
         store: IStoreDetails;
         user: IUserDetails;
     };

@@ -73,8 +73,7 @@ export default class SignUpService {
             // make an entry in localstorage
             CachedSignInService.makeACachedStoreEntry(store);
             // show notify and push to app
-            showNotify('Store created successfully, Redirecting to your store...', {
-                theme: 'success',
+            showNotify('Authentication Success, Redirecting to your store...', {
                 autoHideDuration: 2000,
                 onClose: () => {
                     window.open(`http://${data?.store?.domainName}`, '_self');
@@ -82,6 +81,7 @@ export default class SignUpService {
             });
         } else {
             showNotify('Something went wrong, try sigining in with your email id password');
+            CachedSignInService.removeACachedStore(store?.id);
             history.push(ROUTES.CACHED_SIGN_IN);
         }
     };
