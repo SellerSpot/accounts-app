@@ -8,15 +8,15 @@ import CachedSignInService from './CachedSignIn.service';
 import cachedSignInStyles from './CachedSignIn.module.scss';
 import commonStyles from '../../styles/common.module.scss';
 import { Loader } from 'components/Loader/Loader';
-import { IStoreDetail } from 'typings/store.types';
+import { IStoreDetails } from 'typings/temp.types';
 
 export const CachedSignIn = (): ReactElement => {
     const history = useHistory();
     const [isLoading, setIsLoading] = useState(true);
-    const [stores, setStores] = useState<IStoreDetail[]>([]);
+    const [stores, setStores] = useState<IStoreDetails[]>([]);
 
     const flllSignedInState = async () => {
-        const signedInStores = await CachedSignInService.getSignedInStore();
+        const signedInStores = CachedSignInService.getAllCachedStores();
         if (signedInStores.length) {
             setStores(signedInStores);
             setIsLoading(false);
@@ -52,9 +52,11 @@ export const CachedSignIn = (): ReactElement => {
                             size="large"
                             label={
                                 <div className={cachedSignInStyles.customButton}>
-                                    <h5 className={cachedSignInStyles.storeName}>{store.name}</h5>
+                                    <h5 className={cachedSignInStyles.storeName}>
+                                        {store.storeName}
+                                    </h5>
                                     <h6 className={cachedSignInStyles.domainName}>
-                                        {store.domain}
+                                        {store.domainName}
                                     </h6>
                                 </div>
                             }

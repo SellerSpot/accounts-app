@@ -1,4 +1,4 @@
-import { IStoreDetail } from 'typings/store.types';
+import { IStoreDetails } from 'typings/temp.types';
 
 export interface IResetPasswordFormValues {
     password: string;
@@ -10,5 +10,5 @@ export interface IResetPasswordParams {
 
 export interface IResetToken {
     resetToken: string;
-    storeDetails: IStoreDetail;
+    storeDetails: IStoreDetails;
 }

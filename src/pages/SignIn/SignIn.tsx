@@ -10,13 +10,17 @@ import SignInService from './SignIn.service';
 import commonStyles from '../../styles/common.module.scss';
 import { ISignInFormValues } from './SignIn.types';
 import { Loader } from 'components/Loader/Loader';
-import { IStoreDetail } from 'typings/store.types';
+import { IStoreDetails } from 'typings/temp.types';
 
 export const SignIn = (): ReactElement => {
     const history = useHistory();
     const [isLoading, setIsLoading] = useState(true);
-    const [storeDetail, setStoreDetail] = useState<IStoreDetail>({ domain: '', name: '', id: '' });
-    const location = useLocation<IStoreDetail>();
+    const [storeDetail, setStoreDetail] = useState<IStoreDetails>({
+        domainName: '',
+        storeName: '',
+        id: '',
+    });
+    const location = useLocation<IStoreDetails>();
 
     // effects
     useEffect(() => {
@@ -41,7 +45,7 @@ export const SignIn = (): ReactElement => {
         <Loader isLoading={isLoading}>
             <div className={commonStyles.commonFormWithContentWrapper}>
                 <h4 className={commonStyles.welcomeTitle}>Sign in to</h4>
-                <h5 className={commonStyles.storeTitle}>{storeDetail.name}</h5>
+                <h5 className={commonStyles.storeTitle}>{storeDetail.domainName}</h5>
                 <Button
                     type="button"
                     theme="primary"

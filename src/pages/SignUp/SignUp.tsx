@@ -11,7 +11,7 @@ import {
     StoreNameField,
     StoreUrlField,
 } from './components/Fields';
-import SignUpService from './Singup.service';
+import SignUpService from './Signup.service';
 
 import commonStyles from '../../styles/common.module.scss';
 import { Loader } from 'components/Loader/Loader';

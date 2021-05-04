@@ -1,14 +1,15 @@
 import * as yup from 'yup';
-import { introduceDelay } from 'utilities/general';
 import { FieldMetaState } from 'react-final-form';
 import { CONFIG } from 'config/config';
-import { ISignupTenantResponse, ERROR_CODE } from '@sellerspot/universal-types';
+import { ERROR_CODE } from '@sellerspot/universal-types';
 import { IInputFieldProps, showNotify } from '@sellerspot/universal-components';
 import { ISignupFormValues } from './SignUp.types';
 import { authRequest } from 'requests/requests';
 import { useHistory } from 'react-router';
 import { ROUTES } from 'config/routes';
 import { FormApi } from 'final-form';
+import { ISignupTenantResponse } from 'typings/temp.types';
+import CachedSignInService from 'pages/CachedSignIn/CachedSignIn.service';
 
 export default class SignUpService {
     static initialFormValues: ISignupFormValues = {
@@ -34,6 +35,7 @@ export default class SignUpService {
         });
         const { status, data, error } = response;
         if (status) {
+            // on success authenticate and redirect user to their app
             SignUpService.authenticatedRedirectionHandler(data, history);
         } else {
             const resultError: { [key in keyof Partial<ISignupFormValues>]: string } = {};
@@ -66,12 +68,16 @@ export default class SignUpService {
         history: ReturnType<typeof useHistory>,
     ): void => {
         // authenticate user and redirect to the retrived domain
-        if (data?.domainName) {
+        const { store } = data;
+        if (store?.domainName) {
+            // make an entry in localstorage
+            CachedSignInService.makeACachedStoreEntry(store);
+            // show notify and push to app
             showNotify('Store created successfully, Redirecting to your store...', {
                 theme: 'success',
                 autoHideDuration: 2000,
                 onClose: () => {
-                    window.open(`http://${data?.domainName}`, '_self');
+                    window.open(`http://${data?.store?.domainName}`, '_self');
                 },
             });
         } else {
@@ -90,8 +96,10 @@ export default class SignUpService {
             );
             requiredSchema.validateSync(value, { abortEarly: true });
             // do api validation here
-            await introduceDelay(1000);
-            // axios.get('url?domain=${value}')
+            const response = await authRequest.checkDomainAvailability(value);
+            if (!response?.status) {
+                throw new Error('NOT_AVAILABLE');
+            }
         } catch (error) {
             if (error instanceof yup.ValidationError) {
                 return error.message;

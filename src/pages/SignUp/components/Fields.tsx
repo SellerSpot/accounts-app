@@ -5,7 +5,7 @@ import { InputField } from '@sellerspot/universal-components';
 import { sanitize } from 'utilities/sanitizer';
 import { CONFIG } from 'config/config';
 
-import SignUpService from '../Singup.service';
+import SignUpService from '../Signup.service';
 import { TOnChangeMiddleware } from 'typings/common.types';
 import { FormApi } from 'final-form';
 import { IFieldProps, ISignupFormValues } from '../SignUp.types';
@@ -38,6 +38,7 @@ export const NameField = (props: IFieldProps): ReactElement => {
                         size={'medium'}
                         fullWidth={true}
                         required={true}
+                        disabled={meta.submitting}
                         helperMessage={helperMessage}
                         name={undefined} // to disable auto complete feature
                         disableAutoComplete={true}
@@ -76,6 +77,7 @@ export const StoreNameField = (props: IFieldProps): ReactElement => {
                         fullWidth={true}
                         required={true}
                         helperMessage={helperMessage}
+                        disabled={meta.submitting}
                         name={undefined} // to disable auto complete feature
                         disableAutoComplete={true}
                     />
@@ -121,6 +123,7 @@ export const StoreUrlField = (props: {
                         size={'medium'}
                         fullWidth={true}
                         required={true}
+                        disabled={meta.submitting}
                         helperMessage={helperMessage}
                         name={undefined} // to disable auto complete feature
                         disableAutoComplete={true}
@@ -153,6 +156,7 @@ export const EmailAddressField = (props: IFieldProps): ReactElement => {
                         size={'medium'}
                         fullWidth={true}
                         required={true}
+                        disabled={meta.submitting}
                         helperMessage={helperMessage}
                         name={undefined} // to disable auto complete feature
                         disableAutoComplete={true}
@@ -190,6 +194,7 @@ export const PasswordField = (props: IFieldProps): ReactElement => {
                         size={'medium'}
                         fullWidth={true}
                         required={true}
+                        disabled={meta.submitting}
                         helperMessage={helperMessage}
                         name={undefined} // to disable auto complete feature
                         disableAutoComplete={true}

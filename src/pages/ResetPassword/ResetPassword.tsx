@@ -9,15 +9,19 @@ import ResetPasswordServie from './ResetPassword.service';
 import commonStyles from '../../styles/common.module.scss';
 import { IResetPasswordFormValues, IResetPasswordParams } from './ResetPassword.types';
 import { Loader } from 'components/Loader/Loader';
-import { IStoreDetail } from 'typings/store.types';
 import ResetPasswordService from './ResetPassword.service';
+import { IStoreDetails } from 'typings/temp.types';
 
 export const ResetPassword = (): ReactElement => {
     const history = useHistory();
     const params = useParams<IResetPasswordParams>();
     const [isLoading, setIsLoading] = useState(true);
     const [, setResetToken] = useState('');
-    const [storeDetail, setStoreDetail] = useState<IStoreDetail>({ domain: '', name: '', id: '' });
+    const [storeDetail, setStoreDetail] = useState<IStoreDetails>({
+        domainName: '',
+        storeName: '',
+        id: '',
+    });
 
     // effects
     useEffect(() => {
@@ -44,7 +48,7 @@ export const ResetPassword = (): ReactElement => {
         <Loader isLoading={isLoading}>
             <div className={commonStyles.commonFormWithContentWrapper}>
                 <h4 className={commonStyles.welcomeTitle}>Reset Password</h4>
-                <h5 className={commonStyles.storeTitle}>{storeDetail.name}</h5>
+                <h5 className={commonStyles.storeTitle}>{storeDetail.storeName}</h5>
                 <Button
                     type="button"
                     theme="primary"

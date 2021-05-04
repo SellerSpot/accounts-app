@@ -11,13 +11,17 @@ import commonStyles from '../../styles/common.module.scss';
 import { IForgotPasswordFormValues } from './ForgotPassword.types';
 import { Loader } from 'components/Loader/Loader';
 import SignInService from 'pages/SignIn/SignIn.service';
-import { IStoreDetail } from 'typings/store.types';
+import { IStoreDetails } from 'typings/temp.types';
 
 export const ForgotPassword = (): ReactElement => {
     const history = useHistory();
     const [isLoading, setIsLoading] = useState(true);
-    const [storeDetail, setStoreDetail] = useState<IStoreDetail>({ domain: '', name: '', id: '' });
-    const location = useLocation<IStoreDetail>();
+    const [storeDetail, setStoreDetail] = useState<IStoreDetails>({
+        domainName: '',
+        storeName: '',
+        id: '',
+    });
+    const location = useLocation<IStoreDetails>();
 
     // effects
     useEffect(() => {
@@ -42,7 +46,7 @@ export const ForgotPassword = (): ReactElement => {
         <Loader isLoading={isLoading}>
             <div className={commonStyles.commonFormWithContentWrapper}>
                 <h4 className={commonStyles.welcomeTitle}>Forgot Password?</h4>
-                <h5 className={commonStyles.storeTitle}>{storeDetail.name}</h5>
+                <h5 className={commonStyles.storeTitle}>{storeDetail.domainName}</h5>
                 <h6 className={commonStyles.welcomeSubTitle}>
                     Store admin will only receive password reset mail, <br />
                     employees please contact admin.

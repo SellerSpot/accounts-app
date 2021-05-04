@@ -64,8 +64,8 @@ export default class ResetPasswordService {
             return {
                 resetToken: token,
                 storeDetails: {
-                    domain: 'sreenidhi.sellerspot.in',
-                    name: 'Sreenidhi Departmental Store',
+                    domainName: 'sreenidhi.sellerspot.in',
+                    storeName: 'Sreenidhi Departmental Store',
                     id: 'uniqueid1',
                 },
             };
