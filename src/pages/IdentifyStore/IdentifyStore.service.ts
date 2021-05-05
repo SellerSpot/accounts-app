@@ -19,7 +19,6 @@ export default class IdentifyStoreService {
         history: ReturnType<typeof useHistory>,
     ): Promise<unknown> => {
         // submition logic goes here
-        debugger;
         const { status, data, error } = await authRequest.identifyStore(values.domainName);
         if (status) {
             const { store } = data;
