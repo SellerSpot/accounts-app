@@ -11,7 +11,7 @@ import { TOnChangeMiddleware } from 'typings/common.types';
 export const StoreUrlField = (): ReactElement => {
     return (
         <Field
-            name="storeUrl"
+            name="domainName"
             validate={async (value: string) => await IdentifyStoreServie.storeUrlValidator(value)}
             validateFields={[]}
         >

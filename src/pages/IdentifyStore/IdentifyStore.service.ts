@@ -1,20 +1,40 @@
 import { FieldMetaState } from 'react-final-form';
 import * as yup from 'yup';
 
-import { IInputFieldProps } from '@sellerspot/universal-components';
+import { IInputFieldProps, showNotify } from '@sellerspot/universal-components';
 import { CONFIG } from 'config/config';
-import { introduceDelay } from 'utilities/general';
 
 import { IIdentifyStoreFormValues } from './IdentifyStore.types';
+import { authRequest } from 'requests/requests';
+import { useHistory } from 'react-router';
+import { ROUTES } from 'config/routes';
 
 export default class IdentifyStoreService {
     static initialFormValues: IIdentifyStoreFormValues = {
         domainName: '',
     };
 
-    static submitionHandler = async (values: IIdentifyStoreFormValues): Promise<void> => {
+    static submitionHandler = async (
+        values: IIdentifyStoreFormValues,
+        history: ReturnType<typeof useHistory>,
+    ): Promise<unknown> => {
         // submition logic goes here
-        console.log(values);
+        debugger;
+        const { status, data, error } = await authRequest.identifyStore(values.domainName);
+        if (status) {
+            const { store } = data;
+            history.push(ROUTES.SIGN_IN, store);
+        } else {
+            const resultError: { [key in keyof Partial<IIdentifyStoreFormValues>]: string } = {};
+            if (error?.message) {
+                showNotify(error.message);
+            }
+            resultError[
+                'domainName'
+            ] = `${values.domainName}.${CONFIG.BASE_DOMAIN_NAME} is not a valid domain!`;
+
+            return resultError;
+        }
     };
 
     static storeUrlValidator = async (value: string): Promise<string> => {
@@ -27,7 +47,10 @@ export default class IdentifyStoreService {
             );
             requiredSchema.validateSync(value, { abortEarly: true });
             // do api validation here
-            await introduceDelay(1000);
+            const response = await authRequest.checkIsValidDomain(value);
+            if (!response?.status) {
+                throw new Error('NOT_AVAILABLE');
+            }
             // axios.get('url?domain=${value}')
         } catch (error) {
             if (error instanceof yup.ValidationError) {
@@ -40,7 +63,7 @@ export default class IdentifyStoreService {
 
     static getStoreUrlFieldProps = (
         value: string,
-        { error, validating, valid, touched, visited }: FieldMetaState<string>,
+        { error, validating, valid, touched, visited, modified }: FieldMetaState<string>,
     ): {
         helperMessage: IInputFieldProps['helperMessage'];
         inputFieldTheme: IInputFieldProps['theme'];
@@ -49,7 +72,8 @@ export default class IdentifyStoreService {
         let helperTextType: IInputFieldProps['helperMessage']['type'] = 'none';
         let helperTextContent: string = error;
         let inputFieldTheme: IInputFieldProps['theme'] = 'primary';
-        const helperMessageEnabled = (error || validating || valid) && (touched || visited);
+        const helperMessageEnabled =
+            (error || validating || valid) && (touched || visited || modified);
         if (helperMessageEnabled)
             if (validating) {
                 helperTextType = 'loading';

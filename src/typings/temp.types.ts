@@ -33,4 +33,10 @@ export interface ISigninTenantResponse extends IResponse {
     };
 }
 
+export interface IIdentifyStoreResponse extends IResponse {
+    data?: {
+        store: IStoreDetails;
+    };
+}
+
 export type ICheckDomainAvailability = IResponse;

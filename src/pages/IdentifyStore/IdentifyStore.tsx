@@ -31,7 +31,7 @@ export const IdentifyStore = (): ReactElement => {
     };
 
     const submitionHandler = (values: IIdentifyStoreFormValues) =>
-        IdentifyStoreService.submitionHandler(values);
+        IdentifyStoreService.submitionHandler(values, history);
 
     return (
         <Loader isLoading={isLoading}>
