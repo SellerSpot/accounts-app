@@ -12,9 +12,13 @@ import { ISignInFormValues } from './SignIn.types';
 import { Loader } from 'components/Loader/Loader';
 import { IStoreDetails } from 'typings/temp.types';
 import CachedSignInService from 'pages/CachedSignIn/CachedSignIn.service';
+import { useQuery } from 'customHooks/useQuery';
+import { authRequest } from 'requests/requests';
+import { CONFIG } from 'config/config';
 
 export const SignIn = (): ReactElement => {
     const history = useHistory();
+    const queryParams = useQuery();
     const [isLoading, setIsLoading] = useState(true);
     const [storeDetail, setStoreDetail] = useState<IStoreDetails>({
         domainName: '',
@@ -25,11 +29,19 @@ export const SignIn = (): ReactElement => {
 
     // performs validation and authenticates user if already signin
     const validateStoreDetails = async () => {
-        if (SignInService.checkHasValidStoreDetail(location.state)) {
-            if (
-                !(await SignInService.redirectIfAuthenticated(location.state.domainName, history))
-            ) {
-                setStoreDetail(location.state);
+        let storeState = location.state;
+        if (!storeState) {
+            const domainFromUrl = queryParams.get(CONFIG.SIGN_IN_STORE_DOMAIN_PARAM);
+            if (domainFromUrl) {
+                const { status, data } = await authRequest.identifyStore(domainFromUrl);
+                if (status) {
+                    storeState = data.store;
+                }
+            }
+        }
+        if (SignInService.checkHasValidStoreDetail(storeState)) {
+            if (!(await SignInService.redirectIfAuthenticated(storeState.domainName, history))) {
+                setStoreDetail(storeState);
                 setIsLoading(false);
             }
         } else {

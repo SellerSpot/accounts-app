@@ -8,4 +8,5 @@ export const CONFIG = {
     CACHED_STORES: 'cachedStores',
     // REDUX STATES
     REUDX_AUTH_STATE: 'authState',
+    SIGN_IN_STORE_DOMAIN_PARAM: 'store',
 };
