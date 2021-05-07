@@ -46,7 +46,7 @@ export default class IdentifyStoreService {
             );
             requiredSchema.validateSync(value, { abortEarly: true });
             // do api validation here
-            const response = await authRequest.checkIsValidDomain(value);
+            const response = await authRequest.identifyStore(value);
             if (!response?.status) {
                 throw new Error('NOT_AVAILABLE');
             }

@@ -38,7 +38,7 @@ export default class SignInService {
         domainName: string,
         history: ReturnType<typeof useHistory>,
     ): Promise<boolean> => {
-        const authResponse = await authRequest.checkIfUserAuthenticated(domainName);
+        const authResponse = await authRequest.checkIsUserAuthenticated(domainName);
         const { status, data } = authResponse;
 
         if (status && data?.store) {
