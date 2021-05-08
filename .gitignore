@@ -115,3 +115,5 @@ dist
 storybook-static
 
 yalc.lock
+
+*.pem
