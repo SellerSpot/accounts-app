@@ -137,10 +137,10 @@ const webpackConfiguration = (env: {
             publicPath: '/',
             historyApiFallback: true,
             host: 'accounts.sellerspot.in',
-            https: {
-                key: fs.readFileSync('./security/_wildcard.sellerspot.in+5-key.pem'),
-                cert: fs.readFileSync('./security/_wildcard.sellerspot.in+5.pem'),
-            },
+            // https: {
+            //     key: fs.readFileSync('./security/_wildcard.sellerspot.in+5-key.pem'),
+            //     cert: fs.readFileSync('./security/_wildcard.sellerspot.in+5.pem'),
+            // },
         },
         devtool: !isProduction ? 'source-map' : false,
     };
