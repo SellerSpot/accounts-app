@@ -50,7 +50,6 @@ export default class IdentifyStoreService {
             if (!response?.status) {
                 throw new Error('NOT_AVAILABLE');
             }
-            // axios.get('url?domain=${value}')
         } catch (error) {
             if (error instanceof yup.ValidationError) {
                 return error.message;

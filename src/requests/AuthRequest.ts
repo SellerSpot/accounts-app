@@ -1,6 +1,7 @@
 import {
     ISignupTenantRequest,
     ISignupTenantResponse,
+    IIdentifyStoreResponse,
     // ISigninTenantRequest,
     // ISigninTenantResposne,
     ROUTES,
@@ -13,7 +14,6 @@ import {
     ISigninTenantResponse,
     // ISignupTenantResponse,
     ICheckDomainAvailability,
-    IIdentifyStoreResponse,
 } from 'typings/temp.types';
 import { introduceDelay } from 'utilities/general';
 
@@ -97,25 +97,9 @@ export default class AuthRequest extends BaseRequest {
     }
 
     async identifyStore(domainName: string): Promise<IIdentifyStoreResponse> {
-        return new Promise(async (resolve) => {
-            const success = domainName && true;
-            if (success) {
-                await introduceDelay(1000);
-                resolve({
-                    status: true,
-                    data: {
-                        store: {
-                            id: 'dGhheWEuc2VsbGVyc3BvdC5pbg==',
-                            storeName: 'Thaya stores',
-                            domainName: 'thaya.sellerspot.in',
-                        },
-                    },
-                });
-            } else {
-                resolve({
-                    status: false,
-                });
-            }
+        return <IIdentifyStoreResponse>await apiService.request({
+            method: REQUEST_METHOD.GET,
+            url: this.getUrl(`${ROUTES.AUTH.IDENTIFY_STORE}?domain=${domainName}`),
         });
     }
 }
