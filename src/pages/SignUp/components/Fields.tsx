@@ -10,7 +10,7 @@ import { TOnChangeMiddleware } from 'typings/common.types';
 import { FormApi } from 'final-form';
 import { IFieldProps, ISignupFormValues } from '../SignUp.types';
 
-export const NameField = (props: IFieldProps): ReactElement => {
+export const NameField = (props: IFieldProps<ISignupFormValues>): ReactElement => {
     return (
         <Field
             name="name"
@@ -49,7 +49,7 @@ export const NameField = (props: IFieldProps): ReactElement => {
     );
 };
 
-export const StoreNameField = (props: IFieldProps): ReactElement => {
+export const StoreNameField = (props: IFieldProps<ISignupFormValues>): ReactElement => {
     return (
         <Field
             name="storeName"
@@ -134,7 +134,7 @@ export const StoreUrlField = (props: {
     );
 };
 
-export const EmailAddressField = (props: IFieldProps): ReactElement => {
+export const EmailAddressField = (props: IFieldProps<ISignupFormValues>): ReactElement => {
     return (
         <Field
             name="email"
@@ -167,7 +167,7 @@ export const EmailAddressField = (props: IFieldProps): ReactElement => {
     );
 };
 
-export const PasswordField = (props: IFieldProps): ReactElement => {
+export const PasswordField = (props: IFieldProps<ISignupFormValues>): ReactElement => {
     return (
         <Field
             name="password"

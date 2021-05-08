@@ -1,14 +1,13 @@
 import * as yup from 'yup';
 import { FieldMetaState } from 'react-final-form';
 import { CONFIG } from 'config/config';
-import { ERROR_CODE } from '@sellerspot/universal-types';
+import { ERROR_CODE, IStoreDetails } from '@sellerspot/universal-types';
 import { IInputFieldProps, showNotify } from '@sellerspot/universal-components';
 import { ISignupFormValues } from './SignUp.types';
 import { authRequest } from 'requests/requests';
 import { useHistory } from 'react-router';
 import { ROUTES } from 'config/routes';
 import { FormApi } from 'final-form';
-import { ISignupTenantResponse } from 'typings/temp.types';
 import CachedSignInService from 'pages/CachedSignIn/CachedSignIn.service';
 
 export default class SignUpService {
@@ -34,9 +33,9 @@ export default class SignUpService {
             domainName,
         });
         const { status, data, error } = response;
-        if (status) {
+        if (status && data?.store) {
             // on success authenticate and redirect user to their app
-            SignUpService.authenticatedRedirectionHandler(data, history);
+            SignUpService.authenticatedRedirectionHandler(data?.store, history);
         } else {
             const resultError: { [key in keyof Partial<ISignupFormValues>]: string } = {};
             if (error.message) {
@@ -64,19 +63,18 @@ export default class SignUpService {
     };
 
     static authenticatedRedirectionHandler = (
-        data: ISignupTenantResponse['data'],
+        store: IStoreDetails,
         history: ReturnType<typeof useHistory>,
     ): void => {
         // authenticate user and redirect to the retrived domain
-        const { store } = data;
         if (store?.domainName) {
             // make an entry in localstorage
             CachedSignInService.makeACachedStoreEntry(store);
             // show notify and push to app
             showNotify('Authentication Success, Redirecting to your store...', {
-                autoHideDuration: 2000,
+                autoHideDuration: 1500, // 1.5 second
                 onClose: () => {
-                    window.open(`http://${data?.store?.domainName}`, '_self');
+                    window.open(`http://${store?.domainName}`, '_self');
                 },
             });
         } else {

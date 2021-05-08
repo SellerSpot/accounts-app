@@ -1,5 +1,6 @@
+import { IStoreDetails } from '@sellerspot/universal-types';
+
 import { CONFIG } from 'config/config';
-import { IStoreDetails } from 'typings/temp.types';
 
 export default class CachedSignInService {
     static getCachedStoresObject(): { [key: string]: IStoreDetails } {

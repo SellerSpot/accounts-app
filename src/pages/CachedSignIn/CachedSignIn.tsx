@@ -1,14 +1,14 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-
 import { Button } from '@sellerspot/universal-components';
+import { IStoreDetails } from '@sellerspot/universal-types';
+
 import { ROUTES } from 'config/routes';
 import CachedSignInService from './CachedSignIn.service';
 
 import cachedSignInStyles from './CachedSignIn.module.scss';
 import commonStyles from '../../styles/common.module.scss';
 import { Loader } from 'components/Loader/Loader';
-import { IStoreDetails } from 'typings/temp.types';
 
 export const CachedSignIn = (): ReactElement => {
     const history = useHistory();

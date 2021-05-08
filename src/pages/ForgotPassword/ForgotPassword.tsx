@@ -1,17 +1,16 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { Form } from 'react-final-form';
-
 import { Button, showNotify } from '@sellerspot/universal-components';
+import { IStoreDetails } from '@sellerspot/universal-types';
+
 import { ROUTES } from 'config/routes';
 import { EmailAddressField } from './components/Fields';
 import ForgotPasswordService from './ForgotPassword.service';
-
 import commonStyles from '../../styles/common.module.scss';
 import { IForgotPasswordFormValues } from './ForgotPassword.types';
 import { Loader } from 'components/Loader/Loader';
 import SignInService from 'pages/SignIn/SignIn.service';
-import { IStoreDetails } from 'typings/temp.types';
 
 export const ForgotPassword = (): ReactElement => {
     const history = useHistory();

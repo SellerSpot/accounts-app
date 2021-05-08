@@ -13,6 +13,6 @@ export interface ISignupFormValues {
 //     fieldProps: FieldRenderProps<ISignupFormValues[T]>;
 // };
 
-export interface IFieldProps {
-    form: FormApi<ISignupFormValues, Partial<ISignupFormValues>>;
+export interface IFieldProps<T> {
+    form: FormApi<T, Partial<T>>;
 }

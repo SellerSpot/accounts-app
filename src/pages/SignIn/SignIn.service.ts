@@ -1,13 +1,13 @@
 import { FieldMetaState } from 'react-final-form';
 import * as yup from 'yup';
-
-import { IInputFieldProps } from '@sellerspot/universal-components';
+import { IInputFieldProps, showNotify } from '@sellerspot/universal-components';
+import { IStoreDetails } from '@sellerspot/universal-types';
 
 import { ISignInFormValues } from './SignIn.types';
-import { IStoreDetails } from 'typings/temp.types';
 import { authRequest } from 'requests/requests';
 import SignUpService from 'pages/SignUp/Signup.service';
 import { useHistory } from 'react-router';
+import { FormApi } from 'final-form';
 
 export default class SignInService {
     static initialFormValues: ISignInFormValues = {
@@ -15,9 +15,31 @@ export default class SignInService {
         password: '',
     };
 
-    static submitionHandler = async (values: ISignInFormValues): Promise<void> => {
+    static submitionHandler = async (
+        tenantId: string,
+        values: ISignInFormValues,
+        history: ReturnType<typeof useHistory>,
+    ): Promise<unknown> => {
+        const { email, password } = values;
         // submition logic goes here
-        console.log(values);
+        const response = await authRequest.signInTenant({
+            email,
+            password,
+            tenantId,
+        });
+        const { status, data, error } = response;
+        if (status && data?.store) {
+            // on success authenticate and redirect user to their app
+            SignUpService.authenticatedRedirectionHandler(data?.store, history);
+        } else {
+            const errorMessage = 'Email or password is not valid!';
+            if (error.message) {
+                showNotify(errorMessage);
+            }
+            const resultError: { [key in keyof Partial<ISignInFormValues>]: string } = {};
+            resultError['email'] = errorMessage;
+            return resultError;
+        }
     };
 
     static checkHasValidStoreDetail = (state: IStoreDetails): boolean => {
@@ -38,12 +60,10 @@ export default class SignInService {
         domainName: string,
         history: ReturnType<typeof useHistory>,
     ): Promise<boolean> => {
-        const authResponse = await authRequest.checkIsUserAuthenticated(domainName);
-        const { status, data } = authResponse;
-
+        const { status, data } = await authRequest.checkIsUserAuthenticated(domainName);
         if (status && data?.store) {
             // make redirection
-            SignUpService.authenticatedRedirectionHandler(data, history);
+            SignUpService.authenticatedRedirectionHandler(data?.store, history);
             return true;
         }
         // return false to show the sigin page for the current selected tenant
@@ -71,18 +91,22 @@ export default class SignInService {
         password: yup.string().required('Password is required'),
     });
 
-    static getStaticFieldProps = ({
-        error,
-        touched,
-    }: FieldMetaState<string>): {
+    static getStaticFieldProps = (
+        fieldName: string,
+        { error, touched, dirtySinceLastSubmit, submitError }: FieldMetaState<string>,
+        form: FormApi<ISignInFormValues, Partial<ISignInFormValues>>,
+    ): {
         helperMessage: IInputFieldProps['helperMessage'];
         theme: IInputFieldProps['theme'];
     } => {
-        const hasError = error && touched;
+        if (dirtySinceLastSubmit && submitError) {
+            form.mutators.resetMutator(fieldName);
+        }
+        const hasError = (error || submitError) && touched;
         const helperMessage: IInputFieldProps['helperMessage'] = {
             enabled: hasError,
             type: 'error',
-            content: error,
+            content: error || submitError,
         };
         const theme: IInputFieldProps['theme'] = hasError ? 'danger' : 'primary';
 

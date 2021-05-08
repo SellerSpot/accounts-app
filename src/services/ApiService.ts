@@ -1,6 +1,7 @@
 import Axios, { AxiosInstance } from 'axios';
 import { IResponse, IErrorResponse, ERROR_CODE, REQUEST_METHOD } from '@sellerspot/universal-types';
 import { CONFIG } from 'config/config';
+import { showNotify } from '@sellerspot/universal-components';
 
 export interface IApiServiceProps {
     token: string;
@@ -26,6 +27,7 @@ export class ApiService {
             headers: {
                 AUTHORIZATION: `Bearer ${props.token}`,
             },
+            withCredentials: true,
         });
     };
 
@@ -41,25 +43,29 @@ export class ApiService {
             else {
                 throw new Error('unknown error');
             }
-        } catch (error) {
-            if (error?.response?.data?.status !== undefined) {
-                const data: IResponse = error?.response?.data;
-                if (data.error.code === ERROR_CODE.NOT_AUTHENTICATED_USER) {
-                    // unauthenticate and redirect to accoutns app accounts.sellerspot.in/signin?store=thaya.sellerspot.in&path=/routeintheapp
-                    // clears localstorage
-                } else {
-                    return error.response.data;
+        } catch (errorInstance) {
+            const data: IResponse = errorInstance?.response?.data;
+            const { status, error } = data;
+            if (status !== undefined && error !== undefined) {
+                const { code } = error;
+                switch (code) {
+                    case ERROR_CODE.NOT_AUTHENTICATED_USER:
+                        // unauthenticate and redirect to accoutns app accounts.sellerspot.in/signin?store=thaya.sellerspot.in&path=/routeintheapp
+                        return data;
+
+                    default:
+                        return data;
                 }
             } else {
-                // connectivity issues can be caught here
+                // uncaught errors will go here
+                // connectivity issues will be caught here
                 const errorResponse: IErrorResponse = {
                     code: ERROR_CODE.UNKNOWN_ERROR,
                     message: 'Something went wrong, please try again later!',
                 };
+                showNotify(errorResponse.message);
                 return { status: false, error: errorResponse };
             }
         }
-        // for complex cases when we need to manage authorization
-        // tap the response, unauthenticate the user and redirect to login route (accounts app)
     }
 }

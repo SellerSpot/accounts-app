@@ -65,7 +65,7 @@ export const SignUp = (): ReactElement => {
                 <Form
                     onSubmit={submitionHandler}
                     initialValues={SignUpService.initialFormValues}
-                    subscription={{ submitting: true }} // empty object overrides all subscriptions
+                    subscription={{ submitting: true, submitSucceeded: true }} // empty object overrides all subscriptions
                     mutators={{ resetMutator: resetMutator as Mutator<ISignupFormValues> }}
                 >
                     {({ handleSubmit, submitting, form, submitSucceeded }) => (
@@ -90,7 +90,7 @@ export const SignUp = (): ReactElement => {
                                         ? 'Please wait, Creating your account...'
                                         : 'Create your store for free'
                                 }
-                                disabled={submitting && submitSucceeded}
+                                disabled={submitting || submitSucceeded}
                             />
                         </form>
                     )}

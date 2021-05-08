@@ -2,6 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { Form } from 'react-final-form';
 import { Button, showNotify } from '@sellerspot/universal-components';
+import { IStoreDetails } from '@sellerspot/universal-types';
 
 import { ROUTES } from 'config/routes';
 import { PasswordField } from './components/Fields';
@@ -10,7 +11,6 @@ import commonStyles from '../../styles/common.module.scss';
 import { IResetPasswordFormValues, IResetPasswordParams } from './ResetPassword.types';
 import { Loader } from 'components/Loader/Loader';
 import ResetPasswordService from './ResetPassword.service';
-import { IStoreDetails } from 'typings/temp.types';
 
 export const ResetPassword = (): ReactElement => {
     const history = useHistory();

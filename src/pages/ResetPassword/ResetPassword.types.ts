@@ -1,4 +1,4 @@
-import { IStoreDetails } from 'typings/temp.types';
+import { IStoreDetails } from '@sellerspot/universal-types';
 
 export interface IResetPasswordFormValues {
     password: string;

@@ -3,18 +3,20 @@ import { useHistory, useLocation } from 'react-router';
 import { Form } from 'react-final-form';
 
 import { Button, showNotify } from '@sellerspot/universal-components';
+import { IStoreDetails } from '@sellerspot/universal-types';
+
 import { ROUTES } from 'config/routes';
 import { EmailAddressField, PasswordField } from './components/Fields';
 import SignInService from './SignIn.service';
-
 import commonStyles from '../../styles/common.module.scss';
 import { ISignInFormValues } from './SignIn.types';
 import { Loader } from 'components/Loader/Loader';
-import { IStoreDetails } from 'typings/temp.types';
 import CachedSignInService from 'pages/CachedSignIn/CachedSignIn.service';
 import { useQuery } from 'customHooks/useQuery';
 import { authRequest } from 'requests/requests';
 import { CONFIG } from 'config/config';
+import { Mutator } from 'final-form';
+import { introduceDelay } from 'utilities/general';
 
 export const SignIn = (): ReactElement => {
     const history = useHistory();
@@ -64,7 +66,18 @@ export const SignIn = (): ReactElement => {
 
     const forgotPasswordHandler = () => history.push(ROUTES.FORGOT_PASSWORD, storeDetail);
 
-    const submitionHandler = (values: ISignInFormValues) => SignInService.submitionHandler(values);
+    const submitionHandler = async (values: ISignInFormValues) => {
+        await introduceDelay();
+        return await SignInService.submitionHandler(storeDetail.id, values, history);
+    };
+
+    const resetMutator = (
+        arg: [keyof ISignInFormValues],
+        state: { formState: { submitErrors: { [key in keyof ISignInFormValues]: string } } },
+    ) => {
+        const fieldName = arg[0];
+        state.formState.submitErrors[fieldName] = undefined;
+    };
 
     return (
         <Loader isLoading={isLoading}>
@@ -83,36 +96,43 @@ export const SignIn = (): ReactElement => {
                 <Form
                     onSubmit={submitionHandler}
                     initialValues={SignInService.initialFormValues}
-                    subscription={{}} // empty object overrides all subscriptions
+                    mutators={{ resetMutator: resetMutator as Mutator<ISignInFormValues> }}
+                    subscription={{ submitting: true, submitSucceeded: true }} // empty object overrides all subscriptions
                 >
-                    {({ handleSubmit, submitting }) => (
-                        <form
-                            onSubmit={handleSubmit}
-                            className={commonStyles.formWrapper}
-                            noValidate
-                        >
-                            <EmailAddressField />
-                            <PasswordField />
-                            <Button
-                                type="button"
-                                theme="primary"
-                                variant="text"
-                                size="small"
-                                onClick={forgotPasswordHandler}
-                                label="Forgot Password?"
-                                className={{ wrapper: commonStyles.fogotPasswordLink }}
-                            />
-                            <Button
-                                type="submit"
-                                theme="primary"
-                                variant="contained"
-                                size="large"
-                                label="Login to your store"
-                                fullWidth={true}
-                                disabled={submitting}
-                            />
-                        </form>
-                    )}
+                    {({ handleSubmit, submitting, form, submitSucceeded }) => {
+                        let submitButtonLabel = 'Login to your store';
+                        if (submitting) submitButtonLabel = 'Please wait, checking credentials...';
+                        else if (submitSucceeded)
+                            submitButtonLabel = 'Redirecting to your store...';
+                        return (
+                            <form
+                                onSubmit={handleSubmit}
+                                className={commonStyles.formWrapper}
+                                noValidate
+                            >
+                                <EmailAddressField form={form} />
+                                <PasswordField form={form} />
+                                <Button
+                                    type="button"
+                                    theme="primary"
+                                    variant="text"
+                                    size="small"
+                                    onClick={forgotPasswordHandler}
+                                    label="Forgot Password?"
+                                    className={{ wrapper: commonStyles.fogotPasswordLink }}
+                                />
+                                <Button
+                                    type="submit"
+                                    theme="primary"
+                                    variant="contained"
+                                    size="large"
+                                    label={submitButtonLabel}
+                                    fullWidth={true}
+                                    disabled={submitting || submitSucceeded}
+                                />
+                            </form>
+                        );
+                    }}
                 </Form>
             </div>
         </Loader>

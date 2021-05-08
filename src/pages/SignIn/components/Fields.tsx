@@ -6,8 +6,10 @@ import { sanitize } from 'utilities/sanitizer';
 
 import { TOnChangeMiddleware } from 'typings/common.types';
 import SignInService from '../SignIn.service';
+import { IFieldProps } from 'pages/SignUp/SignUp.types';
+import { ISignInFormValues } from '../SignIn.types';
 
-export const EmailAddressField = (): ReactElement => {
+export const EmailAddressField = (props: IFieldProps<ISignInFormValues>): ReactElement => {
     return (
         <Field
             name="email"
@@ -15,17 +17,22 @@ export const EmailAddressField = (): ReactElement => {
             validateFields={[]}
         >
             {({ input, meta }) => {
-                const { helperMessage, theme } = SignInService.getStaticFieldProps(meta);
+                const { helperMessage, theme } = SignInService.getStaticFieldProps(
+                    input.name,
+                    meta,
+                    props.form,
+                );
                 return (
                     <InputField
                         {...input}
                         label="Email Address"
+                        autoFocus={true}
                         type="text"
                         theme={theme}
                         size={'medium'}
                         fullWidth={true}
                         required={true}
-                        autoFocus={true}
+                        disabled={meta.submitting}
                         helperMessage={helperMessage}
                         name={undefined} // to disable auto complete feature
                         disableAutoComplete={true}
@@ -36,7 +43,7 @@ export const EmailAddressField = (): ReactElement => {
     );
 };
 
-export const PasswordField = (): ReactElement => {
+export const PasswordField = (props: IFieldProps<ISignInFormValues>): ReactElement => {
     return (
         <Field
             name="password"
@@ -44,7 +51,11 @@ export const PasswordField = (): ReactElement => {
             validateFields={[]}
         >
             {({ input, meta }) => {
-                const { helperMessage, theme } = SignInService.getStaticFieldProps(meta);
+                const { helperMessage, theme } = SignInService.getStaticFieldProps(
+                    input.name,
+                    meta,
+                    props.form,
+                );
                 const onChangeMiddleWare: TOnChangeMiddleware = (e) => {
                     e.target.value = sanitize('removeAllSpaces', e.target.value);
                     input.onChange(e);
@@ -59,6 +70,7 @@ export const PasswordField = (): ReactElement => {
                         size={'medium'}
                         fullWidth={true}
                         required={true}
+                        disabled={meta.submitting}
                         helperMessage={helperMessage}
                         name={undefined} // to disable auto complete feature
                         disableAutoComplete={true}
