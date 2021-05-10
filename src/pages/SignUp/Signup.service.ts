@@ -72,9 +72,9 @@ export default class SignUpService {
             CachedSignInService.makeACachedStoreEntry(store);
             // show notify and push to app
             showNotify('Authentication Success, Redirecting to your store...', {
-                autoHideDuration: 1500, // 1.5 second
+                autoHideDuration: 1000, // 1.5 second
                 onClose: () => {
-                    window.open(`http://${store?.domainName}`, '_self');
+                    window.open(store?.domainName, '_self');
                 },
             });
         } else {
