@@ -16,7 +16,12 @@ export const ForgotPassword = (): ReactElement => {
     const history = useHistory();
     const [isLoading, setIsLoading] = useState(true);
     const [storeDetail, setStoreDetail] = useState<IStoreDetails>({
-        domainName: '',
+        domainDetails: {
+            domainName: '',
+            appDomain: '',
+            isCustomDomain: false,
+            protocol: 'https',
+        },
         storeName: '',
         id: '',
     });
@@ -45,7 +50,7 @@ export const ForgotPassword = (): ReactElement => {
         <Loader isLoading={isLoading}>
             <div className={commonStyles.commonFormWithContentWrapper}>
                 <h4 className={commonStyles.welcomeTitle}>Forgot Password?</h4>
-                <h5 className={commonStyles.storeTitle}>{storeDetail.domainName}</h5>
+                <h5 className={commonStyles.storeTitle}>{storeDetail.domainDetails.domainName}</h5>
                 <h6 className={commonStyles.welcomeSubTitle}>
                     Store admin will only receive password reset mail, <br />
                     employees please contact admin.

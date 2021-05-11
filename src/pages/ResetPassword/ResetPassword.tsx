@@ -18,7 +18,12 @@ export const ResetPassword = (): ReactElement => {
     const [isLoading, setIsLoading] = useState(true);
     const [, setResetToken] = useState('');
     const [storeDetail, setStoreDetail] = useState<IStoreDetails>({
-        domainName: '',
+        domainDetails: {
+            domainName: '',
+            appDomain: '',
+            isCustomDomain: false,
+            protocol: 'https',
+        },
         storeName: '',
         id: '',
     });

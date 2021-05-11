@@ -1,13 +1,14 @@
 import { FieldMetaState } from 'react-final-form';
 import * as yup from 'yup';
 import { IInputFieldProps, showNotify } from '@sellerspot/universal-components';
-import { IStoreDetails } from '@sellerspot/universal-types';
+import { IDomainDetails, IStoreDetails } from '@sellerspot/universal-types';
 
 import { ISignInFormValues } from './SignIn.types';
 import { authRequest } from 'requests/requests';
 import SignUpService from 'pages/SignUp/Signup.service';
 import { useHistory } from 'react-router';
 import { FormApi } from 'final-form';
+import CachedSignInService from 'pages/CachedSignIn/CachedSignIn.service';
 
 export default class SignInService {
     static initialFormValues: ISignInFormValues = {
@@ -43,15 +44,22 @@ export default class SignInService {
     };
 
     static checkHasValidStoreDetail = (state: IStoreDetails): boolean => {
+        const domainDetailsSchems: yup.SchemaOf<IDomainDetails> = yup.object().shape({
+            appDomain: yup.string().required(),
+            isCustomDomain: yup.boolean().required(),
+            domainName: yup.string().required(),
+            protocol: yup.mixed<IDomainDetails['protocol']>().required(),
+        });
         const storeDetailValidationSchema: yup.SchemaOf<IStoreDetails> = yup.object().shape({
             id: yup.string().required(),
-            domainName: yup.string().required(),
             storeName: yup.string().required(),
+            domainDetails: domainDetailsSchems,
         });
         try {
             storeDetailValidationSchema.validateSync(state, { abortEarly: true });
             return true;
         } catch (error) {
+            CachedSignInService.removeACachedStore(state?.id);
             return false;
         }
     };

@@ -9,6 +9,7 @@ import CachedSignInService from './CachedSignIn.service';
 import cachedSignInStyles from './CachedSignIn.module.scss';
 import commonStyles from '../../styles/common.module.scss';
 import { Loader } from 'components/Loader/Loader';
+import SignInService from 'pages/SignIn/SignIn.service';
 
 export const CachedSignIn = (): ReactElement => {
     const history = useHistory();
@@ -17,8 +18,11 @@ export const CachedSignIn = (): ReactElement => {
 
     const flllSignedInState = async () => {
         const signedInStores = CachedSignInService.getAllCachedStores();
-        if (signedInStores.length) {
-            setStores(signedInStores);
+        const validStores = signedInStores.filter((signedInStore) =>
+            SignInService.checkHasValidStoreDetail(signedInStore),
+        );
+        if (validStores.length) {
+            setStores(validStores);
             setIsLoading(false);
         } else {
             history.push(ROUTES.IDENTIFY_STORE);
@@ -56,7 +60,7 @@ export const CachedSignIn = (): ReactElement => {
                                         {store.storeName}
                                     </h5>
                                     <h6 className={cachedSignInStyles.domainName}>
-                                        {store.domainName}
+                                        {store.domainDetails.domainName}
                                     </h6>
                                 </div>
                             }

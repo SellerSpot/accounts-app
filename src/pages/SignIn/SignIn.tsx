@@ -16,14 +16,18 @@ import { useQuery } from 'customHooks/useQuery';
 import { authRequest } from 'requests/requests';
 import { CONFIG } from 'config/config';
 import { Mutator } from 'final-form';
-import { introduceDelay } from 'utilities/general';
 
 export const SignIn = (): ReactElement => {
     const history = useHistory();
     const queryParams = useQuery();
     const [isLoading, setIsLoading] = useState(true);
     const [storeDetail, setStoreDetail] = useState<IStoreDetails>({
-        domainName: '',
+        domainDetails: {
+            domainName: '',
+            appDomain: '',
+            isCustomDomain: false,
+            protocol: 'https',
+        },
         storeName: '',
         id: '',
     });
@@ -42,7 +46,12 @@ export const SignIn = (): ReactElement => {
             }
         }
         if (SignInService.checkHasValidStoreDetail(storeState)) {
-            if (!(await SignInService.redirectIfAuthenticated(storeState.domainName, history))) {
+            if (
+                !(await SignInService.redirectIfAuthenticated(
+                    storeState.domainDetails.domainName,
+                    history,
+                ))
+            ) {
                 setStoreDetail(storeState);
                 setIsLoading(false);
             }
@@ -67,7 +76,6 @@ export const SignIn = (): ReactElement => {
     const forgotPasswordHandler = () => history.push(ROUTES.FORGOT_PASSWORD, storeDetail);
 
     const submitionHandler = async (values: ISignInFormValues) => {
-        await introduceDelay();
         return await SignInService.submitionHandler(storeDetail.id, values, history);
     };
 
@@ -83,7 +91,7 @@ export const SignIn = (): ReactElement => {
         <Loader isLoading={isLoading}>
             <div className={commonStyles.commonFormWithContentWrapper}>
                 <h4 className={commonStyles.welcomeTitle}>Sign in to</h4>
-                <h5 className={commonStyles.storeTitle}>{storeDetail.domainName}</h5>
+                <h5 className={commonStyles.storeTitle}>{storeDetail.domainDetails.domainName}</h5>
                 <Button
                     type="button"
                     theme="primary"

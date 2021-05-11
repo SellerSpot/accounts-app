@@ -27,7 +27,6 @@ export const App = (): ReactElement => {
 
     useEffect(() => {
         (async () => {
-            // await introduceDelay();
             setIsLoading(false);
         }).call(null);
     }, []);
