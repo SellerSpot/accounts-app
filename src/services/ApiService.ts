@@ -1,4 +1,4 @@
-import Axios, { AxiosInstance } from 'axios';
+import Axios, { AxiosError, AxiosInstance } from 'axios';
 import { IResponse, IErrorResponse, ERROR_CODE, REQUEST_METHOD } from '@sellerspot/universal-types';
 import { CONFIG } from 'config/config';
 import { showNotify } from '@sellerspot/universal-components';
@@ -34,38 +34,42 @@ export class ApiService {
     public async request(requestPayload: IRequestPayload): Promise<IResponse> {
         try {
             const { url, method, payload } = requestPayload;
-            const response = await this.axios.request({
+            const { data } = await this.axios.request({
                 url,
                 method,
                 data: payload,
             });
-            if (response.data.status !== undefined) return response.data;
+            if (data.status !== undefined) return data;
             else {
                 throw new Error('unknown error');
             }
         } catch (errorInstance) {
-            const data: IResponse = errorInstance?.response?.data;
-            const { status, error } = data;
-            if (status !== undefined && error !== undefined) {
-                const { code } = error;
-                switch (code) {
-                    case ERROR_CODE.NOT_AUTHENTICATED_USER:
-                        // unauthenticate and redirect to accoutns app accounts.sellerspot.in/signin?store=thaya.sellerspot.in&path=/routeintheapp
-                        return data;
+            return this.errorHandler(errorInstance);
+        }
+    }
 
-                    default:
-                        return data;
-                }
-            } else {
-                // uncaught errors will go here
-                // connectivity issues will be caught here
-                const errorResponse: IErrorResponse = {
-                    code: ERROR_CODE.UNKNOWN_ERROR,
-                    message: 'Something went wrong, please try again later!',
-                };
-                showNotify(errorResponse.message);
-                return { status: false, error: errorResponse };
+    private errorHandler(errorInstance: AxiosError): IResponse {
+        const data: IResponse = errorInstance?.response?.data;
+        const { status, error } = data ?? {};
+        const hasKnownError = [status, error].every((item) => item !== undefined);
+        if (hasKnownError) {
+            const { code } = error;
+            switch (code) {
+                case ERROR_CODE.NOT_AUTHENTICATED_USER:
+                    // unauthenticate and redirect to corresponding location
+                    return data;
+                default:
+                    // direct errors which will be direclty handled inside the components
+                    return data;
             }
+        } else {
+            // uncaught like connectivity / not reachable errors will be caught here
+            const errorResponse: IErrorResponse = {
+                code: ERROR_CODE.UNKNOWN_ERROR,
+                message: 'Something went wrong, please try again later!',
+            };
+            showNotify(errorResponse.message);
+            return { status: false, error: errorResponse };
         }
     }
 }
