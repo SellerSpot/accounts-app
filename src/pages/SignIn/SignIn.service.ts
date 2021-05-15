@@ -45,10 +45,9 @@ export default class SignInService {
 
     static checkHasValidStoreDetail = (state: IStoreDetails): boolean => {
         const domainDetailsSchems: yup.SchemaOf<IDomainDetails> = yup.object().shape({
-            appDomain: yup.string().required(),
             isCustomDomain: yup.boolean().required(),
             domainName: yup.string().required(),
-            protocol: yup.mixed<IDomainDetails['protocol']>().required(),
+            url: yup.string().required(),
         });
         const storeDetailValidationSchema: yup.SchemaOf<IStoreDetails> = yup.object().shape({
             id: yup.string().required(),

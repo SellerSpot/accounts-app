@@ -24,9 +24,8 @@ export const SignIn = (): ReactElement => {
     const [storeDetail, setStoreDetail] = useState<IStoreDetails>({
         domainDetails: {
             domainName: '',
-            appDomain: '',
             isCustomDomain: false,
-            protocol: 'https',
+            url: '',
         },
         storeName: '',
         id: '',

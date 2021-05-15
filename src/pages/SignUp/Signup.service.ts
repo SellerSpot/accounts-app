@@ -67,18 +67,15 @@ export default class SignUpService {
         history: ReturnType<typeof useHistory>,
     ): void => {
         // authenticate user and redirect to the retrived domain
-        if (store?.domainDetails?.domainName) {
+        if (store?.domainDetails?.url) {
             // make an entry in localstorage
             CachedSignInService.makeACachedStoreEntry(store);
             // show notify and push to app
-            const { domainName, appDomain, protocol, isCustomDomain } = store.domainDetails;
-            const domainUrl = !isCustomDomain
-                ? `${protocol}://${appDomain}.${domainName}`
-                : `${protocol}://${domainName}`;
+            const { url } = store.domainDetails;
             showNotify('Authentication Success, Redirecting to your store...', {
                 autoHideDuration: 1000, // 1 second delay
                 onClose: () => {
-                    window.open(domainUrl, '_self');
+                    window.open(url, '_self');
                 },
             });
         } else {
