@@ -113,3 +113,7 @@ dist
 
 # storybook build
 storybook-static
+
+yalc.lock
+
+*.pem

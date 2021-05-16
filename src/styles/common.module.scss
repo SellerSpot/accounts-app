@@ -26,3 +26,49 @@
     align-items: center;
     justify-content: center;
 }
+
+.commonFormWithContentWrapper {
+    padding: 0 15px 100px 15px;
+}
+
+.welcomeTitle {
+    font-weight: bold;
+}
+
+.storeTitle {
+    margin-top: 3px;
+
+    color: $accent-color;
+    font-weight: bold;
+}
+
+.welcomeSubTitle {
+    margin-top: 10px;
+}
+
+.signInLink {
+    margin-top: 5px;
+    margin-left: -4px;
+}
+
+.fogotPasswordLink {
+    margin-top: -30px;
+    margin-left: auto;
+}
+
+.formWrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+    gap: 10px;
+}
+
+.separatorText {
+    display: flex;
+
+    width: 100%;
+    height: auto;
+
+    align-items: center;
+    justify-content: center;
+}

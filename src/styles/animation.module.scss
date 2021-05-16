@@ -1,0 +1,16 @@
+.fadeIn {
+    animation-direction: normal;
+    animation-duration: 0.3s;
+    animation-fill-mode: both;
+    animation-name: fade-in;
+    animation-timing-function: ease-in;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
