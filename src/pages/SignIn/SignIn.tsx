@@ -58,7 +58,7 @@ export const SignIn = (): ReactElement => {
             // show notification - for invalid store
             showNotify('Invalid store, Please check store url!');
             // clear the failded cached store handler
-            CachedSignInService.removeACachedStore(location?.state?.id);
+            CachedSignInService.removeACachedStore(storeState?.id);
             //  redirect to cached sigin component
             CachedSignInHandler();
         }
