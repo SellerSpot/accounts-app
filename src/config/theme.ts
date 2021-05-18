@@ -23,7 +23,7 @@ export const COLORS: IColors = {
     backgroundDark: '#212121',
     backgroundPrimary: '#FAFAFA',
     backgroundSecondary: '#F2F2F2',
-    backgroundTertiary: '#E0E0E0',
+    backgroundTertiary: '#ECECEC',
     primary: '#1A73E8',
     primaryLight: '#D9E8FC',
     primaryDark: '#1152A7',
