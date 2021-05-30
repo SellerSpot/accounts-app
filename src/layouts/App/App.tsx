@@ -3,6 +3,8 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import cn from 'classnames';
 import {
     AppPreloader,
+    colorThemes,
+    fontSizeThemes,
     Logo,
     LogoText,
     Notify,
@@ -16,7 +18,6 @@ import '../../styles/core.scss';
 import styles from './app.module.scss';
 
 import { initializeGlobalConfig } from 'config/globalConfig';
-import { COLORS, FONT_SIZE } from 'config/theme';
 import { SignUp } from 'pages/SignUp/SignUp';
 import { SignIn } from 'pages/SignIn/SignIn';
 import { IdentifyStore } from 'pages/IdentifyStore/IdentifyStore';
@@ -41,8 +42,11 @@ export const App = (): ReactElement => {
         window.open(CONFIG.LANDING_APP_URL, '_self');
     };
 
+    const currentColors = colorThemes['default'];
+    const currentFontSizes = fontSizeThemes['default'];
+
     return (
-        <ThemeProvider colors={COLORS} fontSizes={FONT_SIZE}>
+        <ThemeProvider colors={currentColors} fontSizes={currentFontSizes}>
             <div className={styles.appWrapper}>
                 {isLoading ? (
                     <AppPreloader />
