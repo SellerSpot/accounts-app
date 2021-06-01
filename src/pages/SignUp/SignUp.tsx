@@ -59,7 +59,7 @@ export const SignUp = (): ReactElement => {
                     variant="text"
                     size="small"
                     onClick={cachedSignInHandler}
-                    label="Already have an account? Signin instead"
+                    label="Already have an account? Sign In"
                     className={{ wrapper: commonStyles.signInLink }}
                 />
                 <Form
