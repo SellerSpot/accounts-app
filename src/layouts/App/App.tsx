@@ -16,7 +16,7 @@ import '../../styles/core.scss';
 import styles from './app.module.scss';
 
 import { initializeGlobalConfig } from 'config/globalConfig';
-import { COLORS, FONT_SIZE } from 'config/theme';
+import { colorThemes, fontSizeThemes } from '@sellerspot/universal-components';
 import { SignUp } from 'pages/SignUp/SignUp';
 import { SignIn } from 'pages/SignIn/SignIn';
 import { IdentifyStore } from 'pages/IdentifyStore/IdentifyStore';
@@ -42,7 +42,7 @@ export const App = (): ReactElement => {
     };
 
     return (
-        <ThemeProvider colors={COLORS} fontSizes={FONT_SIZE}>
+        <ThemeProvider colors={colorThemes.default} fontSizes={fontSizeThemes.default}>
             <div className={styles.appWrapper}>
                 {isLoading ? (
                     <AppPreloader />
