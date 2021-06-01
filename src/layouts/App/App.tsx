@@ -10,13 +10,10 @@ import {
     Notify,
     ThemeProvider,
 } from '@sellerspot/universal-components';
-
 import { ROUTES } from 'config/routes';
 import { CONFIG } from 'config/config';
-
 import '../../styles/core.scss';
 import styles from './app.module.scss';
-
 import { initializeGlobalConfig } from 'config/globalConfig';
 import { SignUp } from 'pages/SignUp/SignUp';
 import { SignIn } from 'pages/SignIn/SignIn';
@@ -42,11 +39,8 @@ export const App = (): ReactElement => {
         window.open(CONFIG.LANDING_APP_URL, '_self');
     };
 
-    const currentColors = colorThemes['default'];
-    const currentFontSizes = fontSizeThemes['default'];
-
     return (
-        <ThemeProvider colors={currentColors} fontSizes={currentFontSizes}>
+        <ThemeProvider colors={colorThemes.default} fontSizes={fontSizeThemes.default}>
             <div className={styles.appWrapper}>
                 {isLoading ? (
                     <AppPreloader />
