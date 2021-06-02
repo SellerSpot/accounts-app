@@ -3,20 +3,18 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import cn from 'classnames';
 import {
     AppPreloader,
+    colorThemes,
+    fontSizeThemes,
     Logo,
     LogoText,
     Notify,
     ThemeProvider,
 } from '@sellerspot/universal-components';
-
 import { ROUTES } from 'config/routes';
 import { CONFIG } from 'config/config';
-
 import '../../styles/core.scss';
 import styles from './app.module.scss';
-
 import { initializeGlobalConfig } from 'config/globalConfig';
-import { colorThemes, fontSizeThemes } from '@sellerspot/universal-components';
 import { SignUp } from 'pages/SignUp/SignUp';
 import { SignIn } from 'pages/SignIn/SignIn';
 import { IdentifyStore } from 'pages/IdentifyStore/IdentifyStore';

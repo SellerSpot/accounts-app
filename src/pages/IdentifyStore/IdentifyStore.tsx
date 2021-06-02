@@ -43,7 +43,7 @@ export const IdentifyStore = (): ReactElement => {
                     variant="text"
                     size="small"
                     onClick={signupHandler}
-                    label="Don't have an account? Signup instead"
+                    label="Don't have an account? Sign Up"
                     className={{ wrapper: commonStyles.signInLink }}
                 />
                 <Form
