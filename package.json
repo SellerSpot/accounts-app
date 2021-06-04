@@ -68,7 +68,7 @@
         "yalc": "*"
     },
     "dependencies": {
-        "@sellerspot/universal-components": "^1.16.17",
+        "@sellerspot/universal-components": "^1.17.0",
         "@sellerspot/universal-types": "^1.8.8",
         "axios": "^0.21.1",
         "classnames": "^2.2.6",
