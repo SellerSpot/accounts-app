@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { Form } from 'react-final-form';
 
-import { Button } from '@sellerspot/universal-components';
+import { Button, TFormSubmitionHandler } from '@sellerspot/universal-components';
 import { ROUTES } from 'config/routes';
 import {
     EmailAddressField,
@@ -68,32 +68,38 @@ export const SignUp = (): ReactElement => {
                     subscription={{ submitting: true, submitSucceeded: true }} // empty object overrides all subscriptions
                     mutators={{ resetMutator: resetMutator as Mutator<ISignupFormValues> }}
                 >
-                    {({ handleSubmit, submitting, form, submitSucceeded }) => (
-                        <form
-                            onSubmit={handleSubmit}
-                            className={commonStyles.formWrapper}
-                            noValidate
-                        >
-                            <NameField form={form} />
-                            <StoreNameField form={form} />
-                            <StoreUrlField form={form} />
-                            <EmailAddressField form={form} />
-                            <PasswordField form={form} />
-                            <Button
-                                type="submit"
-                                theme="primary"
-                                variant="contained"
-                                size="large"
-                                fullWidth={true}
-                                label={
-                                    submitting
-                                        ? 'Please wait, Creating your account...'
-                                        : 'Create your store for free'
-                                }
-                                disabled={submitting || submitSucceeded}
-                            />
-                        </form>
-                    )}
+                    {({ handleSubmit, submitting, form, submitSucceeded }) => {
+                        const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
+                            e.preventDefault();
+                            if (!(submitting || submitSucceeded)) handleSubmit(e);
+                        };
+                        return (
+                            <form
+                                onSubmit={validatedHandleSubmit}
+                                className={commonStyles.formWrapper}
+                                noValidate
+                            >
+                                <NameField form={form} />
+                                <StoreNameField form={form} />
+                                <StoreUrlField form={form} />
+                                <EmailAddressField form={form} />
+                                <PasswordField form={form} />
+                                <Button
+                                    type="submit"
+                                    theme="primary"
+                                    variant="contained"
+                                    size="large"
+                                    fullWidth={true}
+                                    label={
+                                        submitting
+                                            ? 'Please wait, Creating your account...'
+                                            : 'Create your store for free'
+                                    }
+                                    isLoading={submitting || submitSucceeded}
+                                />
+                            </form>
+                        );
+                    }}
                 </Form>
             </div>
         </Loader>

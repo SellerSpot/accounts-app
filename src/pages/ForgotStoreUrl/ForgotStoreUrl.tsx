@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { Form } from 'react-final-form';
 
-import { Button } from '@sellerspot/universal-components';
+import { Button, TFormSubmitionHandler } from '@sellerspot/universal-components';
 import { ROUTES } from 'config/routes';
 import { EmailAddressField } from './components/Fields';
 import ForgotStoreUrlService from './ForgotStoreUrl.service';
@@ -46,24 +46,30 @@ export const ForgotStoreUrl = (): ReactElement => {
                     initialValues={ForgotStoreUrlService.initialFormValues}
                     subscription={{}} // empty object overrides all subscriptions
                 >
-                    {({ handleSubmit, submitting }) => (
-                        <form
-                            onSubmit={handleSubmit}
-                            className={commonStyles.formWrapper}
-                            noValidate
-                        >
-                            <EmailAddressField />
-                            <Button
-                                type="submit"
-                                theme="primary"
-                                variant="contained"
-                                size="large"
-                                label="Send Store URL"
-                                fullWidth={true}
-                                disabled={submitting}
-                            />
-                        </form>
-                    )}
+                    {({ handleSubmit, submitting, submitSucceeded }) => {
+                        const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
+                            e.preventDefault();
+                            if (!(submitting || submitSucceeded)) handleSubmit(e);
+                        };
+                        return (
+                            <form
+                                onSubmit={validatedHandleSubmit}
+                                className={commonStyles.formWrapper}
+                                noValidate
+                            >
+                                <EmailAddressField />
+                                <Button
+                                    type="submit"
+                                    theme="primary"
+                                    variant="contained"
+                                    size="large"
+                                    label="Send Store URL"
+                                    fullWidth={true}
+                                    isLoading={submitting || submitSucceeded}
+                                />
+                            </form>
+                        );
+                    }}
                 </Form>
             </div>
         </Loader>

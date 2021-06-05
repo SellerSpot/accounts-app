@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { Form } from 'react-final-form';
-import { Button, showNotify } from '@sellerspot/universal-components';
+import { Button, showNotify, TFormSubmitionHandler } from '@sellerspot/universal-components';
 import { IStoreDetails } from '@sellerspot/universal-types';
 
 import { ROUTES } from 'config/routes';
@@ -67,33 +67,39 @@ export const ResetPassword = (): ReactElement => {
                     initialValues={ResetPasswordServie.initialFormValues}
                     subscription={{}} // empty object overrides all subscriptions
                 >
-                    {({ handleSubmit, submitting }) => (
-                        <form
-                            onSubmit={handleSubmit}
-                            className={commonStyles.formWrapper}
-                            noValidate
-                        >
-                            <PasswordField />
-                            <Button
-                                type="button"
-                                theme="primary"
-                                variant="text"
-                                size="small"
-                                onClick={rememberPasswordHandler}
-                                label="Remember passsowrd?"
-                                className={{ wrapper: commonStyles.fogotPasswordLink }}
-                            />
-                            <Button
-                                type="submit"
-                                theme="primary"
-                                variant="contained"
-                                size="large"
-                                label="Reset password"
-                                fullWidth={true}
-                                disabled={submitting}
-                            />
-                        </form>
-                    )}
+                    {({ handleSubmit, submitting, submitSucceeded }) => {
+                        const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
+                            e.preventDefault();
+                            if (!(submitting || submitSucceeded)) handleSubmit(e);
+                        };
+                        return (
+                            <form
+                                onSubmit={validatedHandleSubmit}
+                                className={commonStyles.formWrapper}
+                                noValidate
+                            >
+                                <PasswordField />
+                                <Button
+                                    type="button"
+                                    theme="primary"
+                                    variant="text"
+                                    size="small"
+                                    onClick={rememberPasswordHandler}
+                                    label="Remember passsowrd?"
+                                    className={{ wrapper: commonStyles.fogotPasswordLink }}
+                                />
+                                <Button
+                                    type="submit"
+                                    theme="primary"
+                                    variant="contained"
+                                    size="large"
+                                    label="Reset password"
+                                    fullWidth={true}
+                                    isLoading={submitting || submitSucceeded}
+                                />
+                            </form>
+                        );
+                    }}
                 </Form>
             </div>
         </Loader>

@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { Form } from 'react-final-form';
 
-import { Button, showNotify } from '@sellerspot/universal-components';
+import { Button, showNotify, TFormSubmitionHandler } from '@sellerspot/universal-components';
 import { IStoreDetails } from '@sellerspot/universal-types';
 
 import { ROUTES } from 'config/routes';
@@ -60,7 +60,7 @@ export const SignIn = (): ReactElement => {
             // clear the failded cached store handler
             CachedSignInService.removeACachedStore(storeState?.id);
             //  redirect to cached sigin component
-            CachedSignInHandler();
+            cachedSignInHandler();
         }
     };
 
@@ -70,7 +70,7 @@ export const SignIn = (): ReactElement => {
     }, []);
 
     // handlers
-    const CachedSignInHandler = () => history.push(ROUTES.CACHED_SIGN_IN);
+    const cachedSignInHandler = () => history.push(ROUTES.CACHED_SIGN_IN);
 
     const forgotPasswordHandler = () => history.push(ROUTES.FORGOT_PASSWORD, storeDetail);
 
@@ -96,7 +96,7 @@ export const SignIn = (): ReactElement => {
                     theme="primary"
                     variant="text"
                     size="small"
-                    onClick={CachedSignInHandler}
+                    onClick={cachedSignInHandler}
                     label="Not your store?"
                     className={{ wrapper: commonStyles.signInLink }}
                 />
@@ -111,9 +111,13 @@ export const SignIn = (): ReactElement => {
                         if (submitting) submitButtonLabel = 'Please wait, checking credentials...';
                         else if (submitSucceeded)
                             submitButtonLabel = 'Redirecting to your store...';
+                        const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
+                            e.preventDefault();
+                            if (!(submitting || submitSucceeded)) handleSubmit(e);
+                        };
                         return (
                             <form
-                                onSubmit={handleSubmit}
+                                onSubmit={validatedHandleSubmit}
                                 className={commonStyles.formWrapper}
                                 noValidate
                             >
@@ -135,7 +139,7 @@ export const SignIn = (): ReactElement => {
                                     size="large"
                                     label={submitButtonLabel}
                                     fullWidth={true}
-                                    disabled={submitting || submitSucceeded}
+                                    isLoading={submitting || submitSucceeded}
                                 />
                             </form>
                         );
