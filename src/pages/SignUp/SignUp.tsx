@@ -59,7 +59,7 @@ export const SignUp = (): ReactElement => {
                     variant="text"
                     size="small"
                     onClick={cachedSignInHandler}
-                    label="Already have an account? Sign In"
+                    label="Already have a store? Sign in"
                     className={{ wrapper: commonStyles.signInLink }}
                 />
                 <Form
@@ -73,6 +73,12 @@ export const SignUp = (): ReactElement => {
                             e.preventDefault();
                             if (!(submitting || submitSucceeded)) handleSubmit(e);
                         };
+                        let submitButtonLabel = 'Create your store for free';
+                        if (submitting) {
+                            submitButtonLabel = 'Please wait, Creating your store...';
+                        } else if (submitSucceeded) {
+                            submitButtonLabel = 'Your store has been created';
+                        }
                         return (
                             <form
                                 onSubmit={validatedHandleSubmit}
@@ -90,11 +96,7 @@ export const SignUp = (): ReactElement => {
                                     variant="contained"
                                     size="large"
                                     fullWidth={true}
-                                    label={
-                                        submitting
-                                            ? 'Please wait, Creating your account...'
-                                            : 'Create your store for free'
-                                    }
+                                    label={submitButtonLabel}
                                     isLoading={submitting || submitSucceeded}
                                 />
                             </form>

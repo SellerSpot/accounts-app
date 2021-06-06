@@ -83,7 +83,7 @@ export const CachedSignIn = (): ReactElement => {
                         theme="primary"
                         variant="contained"
                         size="large"
-                        label={'Create a new account'}
+                        label={'Create a new store'}
                         fullWidth={true}
                         onClick={signupHandler}
                     />

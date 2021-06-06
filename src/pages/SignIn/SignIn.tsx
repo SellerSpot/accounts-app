@@ -35,26 +35,38 @@ export const SignIn = (): ReactElement => {
     // performs validation and authenticates user if already signin
     const validateStoreDetails = async () => {
         let storeState = location.state;
-        if (!storeState) {
-            const domainFromUrl = queryParams.get(CONFIG.SIGN_IN_STORE_DOMAIN_PARAM);
+        try {
+            //  pick domain name to validate the store from queryParam or via location state
+            let domainFromUrl = storeState?.domainDetails.domainName;
+            if (!storeState) {
+                domainFromUrl = queryParams.get(CONFIG.SIGN_IN_STORE_DOMAIN_PARAM);
+            }
+            // check is valid store from server
             if (domainFromUrl) {
                 const { status, data } = await authRequest.identifyStore(domainFromUrl);
                 if (status) {
                     storeState = data.store;
+                } else {
+                    throw new Error('Invalid store');
                 }
+            } else {
+                throw new Error('Invalid store');
             }
-        }
-        if (SignInService.checkHasValidStoreDetail(storeState)) {
-            if (
-                !(await SignInService.redirectIfAuthenticated(
-                    storeState.domainDetails.domainName,
-                    history,
-                ))
-            ) {
-                setStoreDetail(storeState);
-                setIsLoading(false);
+            // check has valid store format
+            if (SignInService.checkHasValidStoreDetail(storeState)) {
+                if (
+                    !(await SignInService.redirectIfAuthenticated(
+                        storeState.domainDetails.domainName,
+                        history,
+                    ))
+                ) {
+                    setStoreDetail(storeState);
+                    setIsLoading(false);
+                }
+            } else {
+                throw new Error('Invalid store');
             }
-        } else {
+        } catch (error) {
             // show notification - for invalid store
             showNotify('Invalid store, Please check store url!');
             // clear the failded cached store handler
@@ -108,7 +120,8 @@ export const SignIn = (): ReactElement => {
                 >
                     {({ handleSubmit, submitting, form, submitSucceeded }) => {
                         let submitButtonLabel = 'Login to your store';
-                        if (submitting) submitButtonLabel = 'Please wait, checking credentials...';
+                        if (submitting)
+                            submitButtonLabel = 'Please wait, checking your credentials...';
                         else if (submitSucceeded)
                             submitButtonLabel = 'Redirecting to your store...';
                         const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
