@@ -26,6 +26,7 @@ export const SignIn = (): ReactElement => {
             domainName: '',
             isCustomDomain: false,
             url: '',
+            name: '',
         },
         storeName: '',
         id: '',

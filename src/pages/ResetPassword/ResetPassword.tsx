@@ -22,6 +22,7 @@ export const ResetPassword = (): ReactElement => {
             domainName: '',
             isCustomDomain: false,
             url: '',
+            name: '',
         },
         storeName: '',
         id: '',

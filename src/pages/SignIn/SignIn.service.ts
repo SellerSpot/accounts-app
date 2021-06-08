@@ -48,6 +48,7 @@ export default class SignInService {
             isCustomDomain: yup.boolean().required(),
             domainName: yup.string().required(),
             url: yup.string().required(),
+            name: yup.string().required(),
         });
         const storeDetailValidationSchema: yup.SchemaOf<IStoreDetails> = yup.object().shape({
             id: yup.string().required(),

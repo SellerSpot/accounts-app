@@ -68,6 +68,7 @@ export default class ResetPasswordService {
                         domainName: '',
                         isCustomDomain: false,
                         url: '',
+                        name: '',
                     },
                     storeName: '',
                     id: '',

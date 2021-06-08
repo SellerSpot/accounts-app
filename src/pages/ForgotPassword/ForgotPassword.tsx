@@ -20,6 +20,7 @@ export const ForgotPassword = (): ReactElement => {
             domainName: '',
             isCustomDomain: false,
             url: '',
+            name: '',
         },
         storeName: '',
         id: '',
