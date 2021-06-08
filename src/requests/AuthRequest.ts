@@ -13,7 +13,7 @@ import BaseRequest from './BaseRequest';
 
 export default class AuthRequest extends BaseRequest {
     constructor() {
-        super('CORE');
+        super('AUTH');
     }
 
     async signupTenant(payload: ISignupTenantRequest): Promise<ISignupTenantResponse> {
