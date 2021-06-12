@@ -108,7 +108,7 @@ export default class SignUpService {
         }
     };
 
-    static validationHandler = (value: string, fieldPath: keyof ISignupFormValues): string => {
+    static validationHandler = (fieldPath: keyof ISignupFormValues) => (value: string): string => {
         const requiredSchema: yup.SchemaOf<ISignupFormValues[typeof fieldPath]> = yup.reach(
             SignUpService.validationSchema,
             fieldPath,

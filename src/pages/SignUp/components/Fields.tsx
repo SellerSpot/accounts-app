@@ -14,7 +14,7 @@ export const NameField = (props: IFieldProps<ISignupFormValues>): ReactElement =
     return (
         <Field
             name="name"
-            validate={(value) => SignUpService.validationHandler(value, 'name')}
+            validate={SignUpService.validationHandler('name')}
             validateFields={[]} // to disable unnecessary triggering of validation in other fields
         >
             {({ input, meta }) => {
@@ -53,7 +53,7 @@ export const StoreNameField = (props: IFieldProps<ISignupFormValues>): ReactElem
     return (
         <Field
             name="storeName"
-            validate={(value) => SignUpService.validationHandler(value, 'storeName')}
+            validate={SignUpService.validationHandler('storeName')}
             validateFields={[]}
         >
             {({ input, meta }) => {
@@ -136,11 +136,7 @@ export const StoreUrlField = (props: {
 
 export const EmailAddressField = (props: IFieldProps<ISignupFormValues>): ReactElement => {
     return (
-        <Field
-            name="email"
-            validate={(value) => SignUpService.validationHandler(value, 'email')}
-            validateFields={[]}
-        >
+        <Field name="email" validate={SignUpService.validationHandler('email')} validateFields={[]}>
             {({ input, meta }) => {
                 const { helperMessage, theme } = SignUpService.getStaticFieldProps(
                     input.name,
@@ -171,7 +167,7 @@ export const PasswordField = (props: IFieldProps<ISignupFormValues>): ReactEleme
     return (
         <Field
             name="password"
-            validate={(value) => SignUpService.validationHandler(value, 'password')}
+            validate={SignUpService.validationHandler('password')}
             validateFields={[]}
         >
             {({ input, meta }) => {
