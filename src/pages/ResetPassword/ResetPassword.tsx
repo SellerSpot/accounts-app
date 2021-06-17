@@ -26,6 +26,7 @@ export const ResetPassword = (): ReactElement => {
         },
         storeName: '',
         id: '',
+        installedPlugins: [],
     });
 
     // effects

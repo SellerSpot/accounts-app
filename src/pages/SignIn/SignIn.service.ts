@@ -50,7 +50,9 @@ export default class SignInService {
             url: yup.string().required(),
             name: yup.string().required(),
         });
-        const storeDetailValidationSchema: yup.SchemaOf<IStoreDetails> = yup.object().shape({
+        const storeDetailValidationSchema: yup.SchemaOf<
+            Pick<IStoreDetails, 'id' | 'domainDetails' | 'storeName'>
+        > = yup.object().shape({
             id: yup.string().required(),
             storeName: yup.string().required(),
             domainDetails: domainDetailsSchems,

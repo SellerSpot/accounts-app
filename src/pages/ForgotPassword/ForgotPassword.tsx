@@ -24,6 +24,7 @@ export const ForgotPassword = (): ReactElement => {
         },
         storeName: '',
         id: '',
+        installedPlugins: [],
     });
     const location = useLocation<IStoreDetails>();
 
