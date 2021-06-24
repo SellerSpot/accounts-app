@@ -44,66 +44,66 @@ export const SignUp = (): ReactElement => {
         state.formState.submitErrors[fieldName] = undefined;
     };
 
+    if (isLoading) return <Loader />;
+
     return (
-        <Loader isLoading={isLoading}>
-            <div className={commonStyles.commonFormWithContentWrapper}>
-                <h4 className={commonStyles.welcomeTitle}>
-                    Join our team of 10 million countrywide stores
-                </h4>
-                <h6 className={commonStyles.welcomeSubTitle}>
-                    One more step to taking your business to the next level
-                </h6>
-                <Button
-                    type="button"
-                    theme="primary"
-                    variant="text"
-                    size="small"
-                    onClick={cachedSignInHandler}
-                    label="Already have a store? Sign in"
-                    className={{ wrapper: commonStyles.signInLink }}
-                />
-                <Form
-                    onSubmit={submitionHandler}
-                    initialValues={SignUpService.initialFormValues}
-                    subscription={{ submitting: true, submitSucceeded: true }} // empty object overrides all subscriptions
-                    mutators={{ resetMutator: resetMutator as Mutator<ISignupFormValues> }}
-                >
-                    {({ handleSubmit, submitting, form, submitSucceeded }) => {
-                        const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
-                            e.preventDefault();
-                            if (!(submitting || submitSucceeded)) handleSubmit(e);
-                        };
-                        let submitButtonLabel = 'Create your store for free';
-                        if (submitting) {
-                            submitButtonLabel = 'Please wait, Creating your store...';
-                        } else if (submitSucceeded) {
-                            submitButtonLabel = 'Your store has been created';
-                        }
-                        return (
-                            <form
-                                onSubmit={validatedHandleSubmit}
-                                className={commonStyles.formWrapper}
-                                noValidate
-                            >
-                                <NameField form={form} />
-                                <StoreNameField form={form} />
-                                <StoreUrlField form={form} />
-                                <EmailAddressField form={form} />
-                                <PasswordField form={form} />
-                                <Button
-                                    type="submit"
-                                    theme="primary"
-                                    variant="contained"
-                                    size="large"
-                                    fullWidth={true}
-                                    label={submitButtonLabel}
-                                    isLoading={submitting || submitSucceeded}
-                                />
-                            </form>
-                        );
-                    }}
-                </Form>
-            </div>
-        </Loader>
+        <div className={commonStyles.commonFormWithContentWrapper}>
+            <h4 className={commonStyles.welcomeTitle}>
+                Join our team of 10 million countrywide stores
+            </h4>
+            <h6 className={commonStyles.welcomeSubTitle}>
+                One more step to taking your business to the next level
+            </h6>
+            <Button
+                type="button"
+                theme="primary"
+                variant="text"
+                size="small"
+                onClick={cachedSignInHandler}
+                label="Already have a store? Sign in"
+                className={{ wrapper: commonStyles.signInLink }}
+            />
+            <Form
+                onSubmit={submitionHandler}
+                initialValues={SignUpService.initialFormValues}
+                subscription={{ submitting: true, submitSucceeded: true }} // empty object overrides all subscriptions
+                mutators={{ resetMutator: resetMutator as Mutator<ISignupFormValues> }}
+            >
+                {({ handleSubmit, submitting, form, submitSucceeded }) => {
+                    const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
+                        e.preventDefault();
+                        if (!(submitting || submitSucceeded)) handleSubmit(e);
+                    };
+                    let submitButtonLabel = 'Create your store for free';
+                    if (submitting) {
+                        submitButtonLabel = 'Please wait, Creating your store...';
+                    } else if (submitSucceeded) {
+                        submitButtonLabel = 'Your store has been created';
+                    }
+                    return (
+                        <form
+                            onSubmit={validatedHandleSubmit}
+                            className={commonStyles.formWrapper}
+                            noValidate
+                        >
+                            <NameField form={form} />
+                            <StoreNameField form={form} />
+                            <StoreUrlField form={form} />
+                            <EmailAddressField form={form} />
+                            <PasswordField form={form} />
+                            <Button
+                                type="submit"
+                                theme="primary"
+                                variant="contained"
+                                size="large"
+                                fullWidth={true}
+                                label={submitButtonLabel}
+                                isLoading={submitting || submitSucceeded}
+                            />
+                        </form>
+                    );
+                }}
+            </Form>
+        </div>
     );
 };
