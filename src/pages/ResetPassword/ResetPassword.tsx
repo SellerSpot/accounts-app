@@ -17,24 +17,14 @@ export const ResetPassword = (): ReactElement => {
     const params = useParams<IResetPasswordParams>();
     const [isLoading, setIsLoading] = useState(true);
     const [, setResetToken] = useState('');
-    const [storeDetail, setStoreDetail] = useState<IStoreDetails>({
-        domainDetails: {
-            domainName: '',
-            isCustomDomain: false,
-            url: '',
-            name: '',
-        },
-        storeName: '',
-        id: '',
-        installedPlugins: [],
-    });
+    const [storeDetails, setStoreDetails] = useState<IStoreDetails>(null);
 
     // effects
     useEffect(() => {
         const resetPasswordValidationResult = ResetPasswordService.validateResetToken(params.token);
         if (resetPasswordValidationResult) {
             setResetToken(resetPasswordValidationResult.resetToken);
-            setStoreDetail(resetPasswordValidationResult.storeDetails);
+            setStoreDetails(resetPasswordValidationResult.storeDetails);
             setIsLoading(false);
         } else {
             // show notification - for invalid store
@@ -44,66 +34,66 @@ export const ResetPassword = (): ReactElement => {
     }, []);
 
     // handlers
-    const rememberPasswordHandler = () => history.push(ROUTES.SIGN_IN, storeDetail);
+    const rememberPasswordHandler = () => history.push(ROUTES.SIGN_IN, storeDetails);
     const cachedSignInHandler = () => history.push(ROUTES.CACHED_SIGN_IN);
 
     const submitionHandler = (values: IResetPasswordFormValues) =>
         ResetPasswordServie.submitionHandler(values);
 
+    if (isLoading) return <Loader />;
+
     return (
-        <Loader isLoading={isLoading}>
-            <div className={commonStyles.commonFormWithContentWrapper}>
-                <h4 className={commonStyles.welcomeTitle}>Reset Password</h4>
-                <h5 className={commonStyles.storeTitle}>{storeDetail.storeName}</h5>
-                <Button
-                    type="button"
-                    theme="primary"
-                    variant="text"
-                    size="small"
-                    onClick={cachedSignInHandler}
-                    label="Not your store?"
-                    className={{ wrapper: commonStyles.signInLink }}
-                />
-                <Form
-                    onSubmit={submitionHandler}
-                    initialValues={ResetPasswordServie.initialFormValues}
-                    subscription={{}} // empty object overrides all subscriptions
-                >
-                    {({ handleSubmit, submitting, submitSucceeded }) => {
-                        const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
-                            e.preventDefault();
-                            if (!(submitting || submitSucceeded)) handleSubmit(e);
-                        };
-                        return (
-                            <form
-                                onSubmit={validatedHandleSubmit}
-                                className={commonStyles.formWrapper}
-                                noValidate
-                            >
-                                <PasswordField />
-                                <Button
-                                    type="button"
-                                    theme="primary"
-                                    variant="text"
-                                    size="small"
-                                    onClick={rememberPasswordHandler}
-                                    label="Remember passsowrd?"
-                                    className={{ wrapper: commonStyles.fogotPasswordLink }}
-                                />
-                                <Button
-                                    type="submit"
-                                    theme="primary"
-                                    variant="contained"
-                                    size="large"
-                                    label="Reset password"
-                                    fullWidth={true}
-                                    isLoading={submitting || submitSucceeded}
-                                />
-                            </form>
-                        );
-                    }}
-                </Form>
-            </div>
-        </Loader>
+        <div className={commonStyles.commonFormWithContentWrapper}>
+            <h4 className={commonStyles.welcomeTitle}>Reset Password</h4>
+            <h5 className={commonStyles.storeTitle}>{storeDetails.storeName}</h5>
+            <Button
+                type="button"
+                theme="primary"
+                variant="text"
+                size="small"
+                onClick={cachedSignInHandler}
+                label="Not your store?"
+                className={{ wrapper: commonStyles.signInLink }}
+            />
+            <Form
+                onSubmit={submitionHandler}
+                initialValues={ResetPasswordServie.initialFormValues}
+                subscription={{}} // empty object overrides all subscriptions
+            >
+                {({ handleSubmit, submitting, submitSucceeded }) => {
+                    const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
+                        e.preventDefault();
+                        if (!(submitting || submitSucceeded)) handleSubmit(e);
+                    };
+                    return (
+                        <form
+                            onSubmit={validatedHandleSubmit}
+                            className={commonStyles.formWrapper}
+                            noValidate
+                        >
+                            <PasswordField />
+                            <Button
+                                type="button"
+                                theme="primary"
+                                variant="text"
+                                size="small"
+                                onClick={rememberPasswordHandler}
+                                label="Remember passsowrd?"
+                                className={{ wrapper: commonStyles.fogotPasswordLink }}
+                            />
+                            <Button
+                                type="submit"
+                                theme="primary"
+                                variant="contained"
+                                size="large"
+                                label="Reset password"
+                                fullWidth={true}
+                                isLoading={submitting || submitSucceeded}
+                            />
+                        </form>
+                    );
+                }}
+            </Form>
+        </div>
     );
 };

@@ -21,17 +21,7 @@ export const SignIn = (): ReactElement => {
     const history = useHistory();
     const queryParams = useQuery();
     const [isLoading, setIsLoading] = useState(true);
-    const [storeDetail, setStoreDetail] = useState<IStoreDetails>({
-        domainDetails: {
-            domainName: '',
-            isCustomDomain: false,
-            url: '',
-            name: '',
-        },
-        storeName: '',
-        id: '',
-        installedPlugins: [],
-    });
+    const [storeDetails, setStoreDetails] = useState<IStoreDetails>(null);
     const location = useLocation<IStoreDetails>();
 
     // performs validation and authenticates user if already signin
@@ -62,7 +52,7 @@ export const SignIn = (): ReactElement => {
                         history,
                     ))
                 ) {
-                    setStoreDetail(storeState);
+                    setStoreDetails(storeState);
                     setIsLoading(false);
                 }
             } else {
@@ -86,10 +76,10 @@ export const SignIn = (): ReactElement => {
     // handlers
     const cachedSignInHandler = () => history.push(ROUTES.CACHED_SIGN_IN);
 
-    const forgotPasswordHandler = () => history.push(ROUTES.FORGOT_PASSWORD, storeDetail);
+    const forgotPasswordHandler = () => history.push(ROUTES.FORGOT_PASSWORD, storeDetails);
 
     const submitionHandler = async (values: ISignInFormValues) => {
-        return await SignInService.submitionHandler(storeDetail.id, values, history);
+        return await SignInService.submitionHandler(storeDetails.id, values, history);
     };
 
     const resetMutator = (
@@ -100,67 +90,65 @@ export const SignIn = (): ReactElement => {
         state.formState.submitErrors[fieldName] = undefined;
     };
 
+    if (isLoading) return <Loader />;
+
     return (
-        <Loader isLoading={isLoading}>
-            <div className={commonStyles.commonFormWithContentWrapper}>
-                <h4 className={commonStyles.welcomeTitle}>Sign in to</h4>
-                <h5 className={commonStyles.storeTitle}>{storeDetail.domainDetails.domainName}</h5>
-                <Button
-                    type="button"
-                    theme="primary"
-                    variant="text"
-                    size="small"
-                    onClick={cachedSignInHandler}
-                    label="Not your store?"
-                    className={{ wrapper: commonStyles.signInLink }}
-                />
-                <Form
-                    onSubmit={submitionHandler}
-                    initialValues={SignInService.initialFormValues}
-                    mutators={{ resetMutator: resetMutator as Mutator<ISignInFormValues> }}
-                    subscription={{ submitting: true, submitSucceeded: true }} // empty object overrides all subscriptions
-                >
-                    {({ handleSubmit, submitting, form, submitSucceeded }) => {
-                        let submitButtonLabel = 'Login to your store';
-                        if (submitting)
-                            submitButtonLabel = 'Please wait, checking your credentials...';
-                        else if (submitSucceeded)
-                            submitButtonLabel = 'Redirecting to your store...';
-                        const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
-                            e.preventDefault();
-                            if (!(submitting || submitSucceeded)) handleSubmit(e);
-                        };
-                        return (
-                            <form
-                                onSubmit={validatedHandleSubmit}
-                                className={commonStyles.formWrapper}
-                                noValidate
-                            >
-                                <EmailAddressField form={form} />
-                                <PasswordField form={form} />
-                                <Button
-                                    type="button"
-                                    theme="primary"
-                                    variant="text"
-                                    size="small"
-                                    onClick={forgotPasswordHandler}
-                                    label="Forgot Password?"
-                                    className={{ wrapper: commonStyles.fogotPasswordLink }}
-                                />
-                                <Button
-                                    type="submit"
-                                    theme="primary"
-                                    variant="contained"
-                                    size="large"
-                                    label={submitButtonLabel}
-                                    fullWidth={true}
-                                    isLoading={submitting || submitSucceeded}
-                                />
-                            </form>
-                        );
-                    }}
-                </Form>
-            </div>
-        </Loader>
+        <div className={commonStyles.commonFormWithContentWrapper}>
+            <h4 className={commonStyles.welcomeTitle}>Sign in to</h4>
+            <h5 className={commonStyles.storeTitle}>{storeDetails.domainDetails.domainName}</h5>
+            <Button
+                type="button"
+                theme="primary"
+                variant="text"
+                size="small"
+                onClick={cachedSignInHandler}
+                label="Not your store?"
+                className={{ wrapper: commonStyles.signInLink }}
+            />
+            <Form
+                onSubmit={submitionHandler}
+                initialValues={SignInService.initialFormValues}
+                mutators={{ resetMutator: resetMutator as Mutator<ISignInFormValues> }}
+                subscription={{ submitting: true, submitSucceeded: true }} // empty object overrides all subscriptions
+            >
+                {({ handleSubmit, submitting, form, submitSucceeded }) => {
+                    let submitButtonLabel = 'Login to your store';
+                    if (submitting) submitButtonLabel = 'Please wait, checking your credentials...';
+                    else if (submitSucceeded) submitButtonLabel = 'Redirecting to your store...';
+                    const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
+                        e.preventDefault();
+                        if (!(submitting || submitSucceeded)) handleSubmit(e);
+                    };
+                    return (
+                        <form
+                            onSubmit={validatedHandleSubmit}
+                            className={commonStyles.formWrapper}
+                            noValidate
+                        >
+                            <EmailAddressField form={form} />
+                            <PasswordField form={form} />
+                            <Button
+                                type="button"
+                                theme="primary"
+                                variant="text"
+                                size="small"
+                                onClick={forgotPasswordHandler}
+                                label="Forgot Password?"
+                                className={{ wrapper: commonStyles.fogotPasswordLink }}
+                            />
+                            <Button
+                                type="submit"
+                                theme="primary"
+                                variant="contained"
+                                size="large"
+                                label={submitButtonLabel}
+                                fullWidth={true}
+                                isLoading={submitting || submitSucceeded}
+                            />
+                        </form>
+                    );
+                }}
+            </Form>
+        </div>
     );
 };

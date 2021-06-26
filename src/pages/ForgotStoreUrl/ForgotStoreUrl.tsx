@@ -25,53 +25,53 @@ export const ForgotStoreUrl = (): ReactElement => {
     const submitionHandler = (values: IForgotStoreUrlFormValues) =>
         ForgotStoreUrlService.submitionHandler(values);
 
+    if (isLoading) return <Loader />;
+
     return (
-        <Loader isLoading={isLoading}>
-            <div className={commonStyles.commonFormWithContentWrapper}>
-                <h4 className={commonStyles.welcomeTitle}>Forgot Store URL?</h4>
-                <h6 className={commonStyles.welcomeSubTitle}>
-                    The Store URL will be sent to the admin&apos;s registered email address.
-                </h6>
-                <Button
-                    type="button"
-                    theme="primary"
-                    variant="text"
-                    size="small"
-                    onClick={identifyStoreHandler}
-                    label="Remember your store URL?"
-                    className={{ wrapper: commonStyles.signInLink }}
-                />
-                <Form
-                    onSubmit={submitionHandler}
-                    initialValues={ForgotStoreUrlService.initialFormValues}
-                    subscription={{}} // empty object overrides all subscriptions
-                >
-                    {({ handleSubmit, submitting, submitSucceeded }) => {
-                        const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
-                            e.preventDefault();
-                            if (!(submitting || submitSucceeded)) handleSubmit(e);
-                        };
-                        return (
-                            <form
-                                onSubmit={validatedHandleSubmit}
-                                className={commonStyles.formWrapper}
-                                noValidate
-                            >
-                                <EmailAddressField />
-                                <Button
-                                    type="submit"
-                                    theme="primary"
-                                    variant="contained"
-                                    size="large"
-                                    label="Send Store URL"
-                                    fullWidth={true}
-                                    isLoading={submitting || submitSucceeded}
-                                />
-                            </form>
-                        );
-                    }}
-                </Form>
-            </div>
-        </Loader>
+        <div className={commonStyles.commonFormWithContentWrapper}>
+            <h4 className={commonStyles.welcomeTitle}>Forgot Store URL?</h4>
+            <h6 className={commonStyles.welcomeSubTitle}>
+                The Store URL will be sent to the admin&apos;s registered email address.
+            </h6>
+            <Button
+                type="button"
+                theme="primary"
+                variant="text"
+                size="small"
+                onClick={identifyStoreHandler}
+                label="Remember your store URL?"
+                className={{ wrapper: commonStyles.signInLink }}
+            />
+            <Form
+                onSubmit={submitionHandler}
+                initialValues={ForgotStoreUrlService.initialFormValues}
+                subscription={{}} // empty object overrides all subscriptions
+            >
+                {({ handleSubmit, submitting, submitSucceeded }) => {
+                    const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
+                        e.preventDefault();
+                        if (!(submitting || submitSucceeded)) handleSubmit(e);
+                    };
+                    return (
+                        <form
+                            onSubmit={validatedHandleSubmit}
+                            className={commonStyles.formWrapper}
+                            noValidate
+                        >
+                            <EmailAddressField />
+                            <Button
+                                type="submit"
+                                theme="primary"
+                                variant="contained"
+                                size="large"
+                                label="Send Store URL"
+                                fullWidth={true}
+                                isLoading={submitting || submitSucceeded}
+                            />
+                        </form>
+                    );
+                }}
+            </Form>
+        </div>
     );
 };

@@ -61,20 +61,7 @@ export default class ResetPasswordService {
 
     static validateResetToken(token: string): IResetToken | false {
         if (token) {
-            return {
-                resetToken: token,
-                storeDetails: {
-                    domainDetails: {
-                        domainName: '',
-                        isCustomDomain: false,
-                        url: '',
-                        name: '',
-                    },
-                    storeName: '',
-                    id: '',
-                    installedPlugins: [],
-                },
-            };
+            return null;
         }
         return false;
     }

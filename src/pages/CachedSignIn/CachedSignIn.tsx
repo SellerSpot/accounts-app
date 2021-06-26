@@ -42,53 +42,51 @@ export const CachedSignIn = (): ReactElement => {
         history.push(ROUTES.SIGN_IN, store);
     };
 
+    if (isLoading) return <Loader />;
+
     return (
-        <Loader isLoading={isLoading}>
-            <div className={commonStyles.commonFormWithContentWrapper}>
-                <h4 className={commonStyles.welcomeTitle}>Sign in to</h4>
-                <div className={cachedSignInStyles.cachedButtonsWrapper}>
-                    {stores?.map((store, key) => (
-                        <Button
-                            key={key}
-                            type="button"
-                            theme="primary"
-                            variant="outlined"
-                            size="large"
-                            label={
-                                <div className={cachedSignInStyles.customButton}>
-                                    <h5 className={cachedSignInStyles.storeName}>
-                                        {store.storeName}
-                                    </h5>
-                                    <h6 className={cachedSignInStyles.domainName}>
-                                        {store.domainDetails.domainName}
-                                    </h6>
-                                </div>
-                            }
-                            fullWidth={true}
-                            onClick={() => signInWithHandler(key)}
-                        />
-                    ))}
+        <div className={commonStyles.commonFormWithContentWrapper}>
+            <h4 className={commonStyles.welcomeTitle}>Sign in to</h4>
+            <div className={cachedSignInStyles.cachedButtonsWrapper}>
+                {stores?.map((store, key) => (
                     <Button
+                        key={key}
                         type="button"
                         theme="primary"
-                        variant="contained"
+                        variant="outlined"
                         size="large"
-                        label={'Signin to a different store'}
+                        label={
+                            <div className={cachedSignInStyles.customButton}>
+                                <h5 className={cachedSignInStyles.storeName}>{store.storeName}</h5>
+                                <h6 className={cachedSignInStyles.domainName}>
+                                    {store.domainDetails.domainName}
+                                </h6>
+                            </div>
+                        }
                         fullWidth={true}
-                        onClick={signInWithDifferentAccountHandler}
+                        onClick={() => signInWithHandler(key)}
                     />
-                    <h6 className={commonStyles.separatorText}>or</h6>
-                    <Button
-                        type="button"
-                        theme="primary"
-                        variant="contained"
-                        size="large"
-                        label={'Create a new store'}
-                        fullWidth={true}
-                        onClick={signupHandler}
-                    />
-                </div>
+                ))}
+                <Button
+                    type="button"
+                    theme="primary"
+                    variant="contained"
+                    size="large"
+                    label={'Signin to a different store'}
+                    fullWidth={true}
+                    onClick={signInWithDifferentAccountHandler}
+                />
+                <h6 className={commonStyles.separatorText}>or</h6>
+                <Button
+                    type="button"
+                    theme="primary"
+                    variant="contained"
+                    size="large"
+                    label={'Create a new store'}
+                    fullWidth={true}
+                    onClick={signupHandler}
+                />
             </div>
-        </Loader>
+        </div>
     );
 };

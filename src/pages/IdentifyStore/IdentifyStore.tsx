@@ -33,59 +33,59 @@ export const IdentifyStore = (): ReactElement => {
     const submitionHandler = (values: IIdentifyStoreFormValues) =>
         IdentifyStoreService.submitionHandler(values, history);
 
+    if (isLoading) return <Loader />;
+
     return (
-        <Loader isLoading={isLoading}>
-            <div className={commonStyles.commonFormWithContentWrapper}>
-                <h4 className={commonStyles.welcomeTitle}>Sign in to</h4>
-                <Button
-                    type="button"
-                    theme="primary"
-                    variant="text"
-                    size="small"
-                    onClick={signupHandler}
-                    label="Don't have a store? Create one"
-                    className={{ wrapper: commonStyles.signInLink }}
-                />
-                <Form
-                    onSubmit={submitionHandler}
-                    initialValues={IdentifyStoreService.initialFormValues}
-                    subscription={{}} // empty object overrides all subscriptions
-                >
-                    {({ handleSubmit, submitting, submitSucceeded }) => {
-                        const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
-                            e.preventDefault();
-                            if (!(submitting || submitSucceeded)) handleSubmit(e);
-                        };
-                        return (
-                            <form
-                                onSubmit={validatedHandleSubmit}
-                                className={commonStyles.formWrapper}
-                                noValidate
-                            >
-                                <StoreUrlField />
-                                <Button
-                                    type="button"
-                                    theme="primary"
-                                    variant="text"
-                                    size="small"
-                                    onClick={forgotStoreUrlHanlder}
-                                    label="Forgot Store URL?"
-                                    className={{ wrapper: commonStyles.fogotPasswordLink }}
-                                />
-                                <Button
-                                    type="submit"
-                                    theme="primary"
-                                    variant="contained"
-                                    size="large"
-                                    label="Login to your store"
-                                    fullWidth={true}
-                                    isLoading={submitting || submitSucceeded}
-                                />
-                            </form>
-                        );
-                    }}
-                </Form>
-            </div>
-        </Loader>
+        <div className={commonStyles.commonFormWithContentWrapper}>
+            <h4 className={commonStyles.welcomeTitle}>Sign in to</h4>
+            <Button
+                type="button"
+                theme="primary"
+                variant="text"
+                size="small"
+                onClick={signupHandler}
+                label="Don't have a store? Create one"
+                className={{ wrapper: commonStyles.signInLink }}
+            />
+            <Form
+                onSubmit={submitionHandler}
+                initialValues={IdentifyStoreService.initialFormValues}
+                subscription={{}} // empty object overrides all subscriptions
+            >
+                {({ handleSubmit, submitting, submitSucceeded }) => {
+                    const validatedHandleSubmit: TFormSubmitionHandler = (e) => {
+                        e.preventDefault();
+                        if (!(submitting || submitSucceeded)) handleSubmit(e);
+                    };
+                    return (
+                        <form
+                            onSubmit={validatedHandleSubmit}
+                            className={commonStyles.formWrapper}
+                            noValidate
+                        >
+                            <StoreUrlField />
+                            <Button
+                                type="button"
+                                theme="primary"
+                                variant="text"
+                                size="small"
+                                onClick={forgotStoreUrlHanlder}
+                                label="Forgot Store URL?"
+                                className={{ wrapper: commonStyles.fogotPasswordLink }}
+                            />
+                            <Button
+                                type="submit"
+                                theme="primary"
+                                variant="contained"
+                                size="large"
+                                label="Login to your store"
+                                fullWidth={true}
+                                isLoading={submitting || submitSucceeded}
+                            />
+                        </form>
+                    );
+                }}
+            </Form>
+        </div>
     );
 };
