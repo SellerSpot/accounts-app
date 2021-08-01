@@ -108,21 +108,23 @@ export default class SignUpService {
         }
     };
 
-    static validationHandler = (fieldPath: keyof ISignupFormValues) => (value: string): string => {
-        const requiredSchema: yup.SchemaOf<ISignupFormValues[typeof fieldPath]> = yup.reach(
-            SignUpService.validationSchema,
-            fieldPath,
-        );
-        try {
-            requiredSchema.validateSync(value, { abortEarly: true });
-        } catch (error) {
-            if (error instanceof yup.ValidationError) {
-                return error.message;
+    static validationHandler =
+        (fieldPath: keyof ISignupFormValues) =>
+        (value: string): string => {
+            const requiredSchema: yup.SchemaOf<ISignupFormValues[typeof fieldPath]> = yup.reach(
+                SignUpService.validationSchema,
+                fieldPath,
+            );
+            try {
+                requiredSchema.validateSync(value, { abortEarly: true });
+            } catch (error) {
+                if (error instanceof yup.ValidationError) {
+                    return error.message;
+                }
+                // uncaught error
+                return error;
             }
-            // uncaught error
-            return error;
-        }
-    };
+        };
 
     // validate schema
     private static validationSchema: yup.SchemaOf<ISignupFormValues> = yup.object().shape({

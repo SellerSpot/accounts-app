@@ -16,10 +16,8 @@ export const StoreUrlField = (): ReactElement => {
             validateFields={[]}
         >
             {({ input, meta }) => {
-                const {
-                    inputFieldTheme,
-                    helperMessage,
-                } = IdentifyStoreServie.getStoreUrlFieldProps(input.value, meta);
+                const { inputFieldTheme, helperMessage } =
+                    IdentifyStoreServie.getStoreUrlFieldProps(input.value, meta);
                 const onChangeMiddleWare: TOnChangeMiddleware = (e) => {
                     e.target.value = sanitize('onlyAllowAlphaNumeric', e.target.value);
                     input.onChange(e);
