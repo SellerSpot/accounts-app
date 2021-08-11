@@ -1,11 +1,11 @@
 import path from 'path';
 import fs from 'fs';
-import { Configuration } from 'webpack';
+import { Configuration, DefinePlugin } from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 import { getEnvironmentVariables } from './src/config/dotenv';
-import webpack from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 const webpackConfiguration = (env: {
@@ -14,9 +14,9 @@ const webpackConfiguration = (env: {
     analyze?: boolean;
     story?: boolean;
 }): Configuration => {
-    const isProduction = env.production ? true : false;
-    const isAnalyze = env.analyze ? true : false;
-    const isStory = env.story ? true : false;
+    const isProduction = !!env.production;
+    const isAnalyze = !!env.analyze;
+    const isStory = !!env.story;
     const envVariables = getEnvironmentVariables(isProduction);
     const devPort = Number(JSON.parse(envVariables['process.env.PORT']));
     const resolve = isStory
@@ -35,10 +35,6 @@ const webpackConfiguration = (env: {
                       extensions: ['.ts', '.tsx', '.js', '.css', '.module.css'],
                   }),
               ],
-              fallback: {
-                  path: require.resolve('path-browserify'),
-                  fs: require.resolve('fs'),
-              },
           };
     return {
         entry: './src',
@@ -114,7 +110,8 @@ const webpackConfiguration = (env: {
             ],
         },
         plugins: [
-            new webpack.DefinePlugin(envVariables), // setting environment variables
+            new CleanWebpackPlugin(),
+            new DefinePlugin(envVariables), // setting environment variables
             new HtmlWebpackPlugin({
                 inject: true,
                 template: path.join(__dirname, '/public/index.html'),
@@ -125,14 +122,13 @@ const webpackConfiguration = (env: {
                     files: './src',
                 },
             }),
-            isAnalyze
-                ? new BundleAnalyzerPlugin({ analyzerMode: 'static' })
-                : new webpack.DefinePlugin({}),
+            isAnalyze ? new BundleAnalyzerPlugin({ analyzerMode: 'static' }) : new DefinePlugin({}),
         ],
         devServer: {
             port: devPort,
             open: true,
-            hot: false,
+            hot: true,
+            injectHot: true,
             contentBase: 'public',
             publicPath: '/',
             historyApiFallback: true,
@@ -142,7 +138,7 @@ const webpackConfiguration = (env: {
                 cert: fs.readFileSync('./security/_wildcard.sellerspot.in+5.pem'),
             },
         },
-        devtool: !isProduction ? 'source-map' : false,
+        devtool: !isProduction ? 'eval-source-map' : false,
     };
 };
 
